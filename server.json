@@ -1,0 +1,58 @@
+{
+  "$schema": "https://registry.modelcontextprotocol.io/schema/server.json",
+  "name": "io.github.pagelines/n8n-mcp",
+  "displayName": "pl-n8n-mcp",
+  "description": "Opinionated MCP server for n8n workflow automation with built-in validation and safety features",
+  "version": "0.1.0",
+  "author": {
+    "name": "PageLines",
+    "url": "https://github.com/pagelines"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PageLines/n8n-mcp"
+  },
+  "license": "MIT",
+  "packages": {
+    "npm": "@pagelines/n8n-mcp"
+  },
+  "runtime": {
+    "command": "npx",
+    "args": ["-y", "@pagelines/n8n-mcp"],
+    "env": {
+      "N8N_API_URL": {
+        "description": "n8n instance URL",
+        "required": true
+      },
+      "N8N_API_KEY": {
+        "description": "n8n API key",
+        "required": true,
+        "secret": true
+      }
+    }
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": false,
+    "prompts": false
+  },
+  "tools": [
+    "workflow_list",
+    "workflow_get",
+    "workflow_create",
+    "workflow_update",
+    "workflow_delete",
+    "workflow_activate",
+    "workflow_deactivate",
+    "workflow_execute",
+    "workflow_validate",
+    "execution_list",
+    "execution_get"
+  ],
+  "keywords": [
+    "n8n",
+    "workflow",
+    "automation",
+    "mcp"
+  ]
+}

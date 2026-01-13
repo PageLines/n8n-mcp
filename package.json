@@ -1,0 +1,42 @@
+{
+  "name": "@pagelines/n8n-mcp",
+  "version": "0.1.0",
+  "description": "Opinionated MCP server for n8n workflow automation",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "pl-n8n-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "n8n",
+    "mcp",
+    "model-context-protocol",
+    "workflow",
+    "automation",
+    "pagelines"
+  ],
+  "author": "PageLines",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PageLines/n8n-mcp"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
