@@ -1,0 +1,20 @@
+# Source files (dist/ is published)
+src/
+tsconfig.json
+vitest.config.ts
+
+# Development
+.claude/
+.github/
+plans/
+docs/
+*.log
+.DS_Store
+.env
+
+# Tests (included in dist/ but not needed)
+**/*.test.js
+**/*.test.d.ts
+
+# Config
+server.json
