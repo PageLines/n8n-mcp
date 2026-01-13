@@ -3,7 +3,7 @@
   "name": "io.github.pagelines/n8n-mcp",
   "displayName": "pl-n8n-mcp",
   "description": "Opinionated MCP server for n8n workflow automation with built-in validation and safety features",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "PageLines",
     "url": "https://github.com/pagelines"
@@ -46,8 +46,16 @@
     "workflow_deactivate",
     "workflow_execute",
     "workflow_validate",
+    "workflow_autofix",
+    "workflow_format",
     "execution_list",
-    "execution_get"
+    "execution_get",
+    "version_list",
+    "version_get",
+    "version_save",
+    "version_rollback",
+    "version_diff",
+    "version_stats"
   ],
   "keywords": [
     "n8n",
