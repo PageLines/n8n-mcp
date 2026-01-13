@@ -249,16 +249,17 @@ Example: { "operations": [{ "type": "updateNode", "nodeName": "my_node", "proper
   },
 
   // ─────────────────────────────────────────────────────────────
-  // Validation
+  // Validation & Quality
   // ─────────────────────────────────────────────────────────────
   {
     name: 'workflow_validate',
     description: `Validate a workflow against best practices:
 - snake_case naming
 - Explicit node references (no $json)
-- No hardcoded IDs
-- No hardcoded secrets
-- No orphan nodes`,
+- No hardcoded IDs or secrets
+- No orphan nodes
+- AI node structured output
+- Expression syntax validation`,
     inputSchema: {
       type: 'object',
       properties: {
@@ -268,6 +269,156 @@ Example: { "operations": [{ "type": "updateNode", "nodeName": "my_node", "proper
         },
       },
       required: ['id'],
+    },
+  },
+
+  {
+    name: 'workflow_autofix',
+    description: `Auto-fix common validation issues:
+- Convert names to snake_case
+- Replace $json with explicit node references
+- Add AI structured output settings
+
+Returns the fixed workflow and list of changes made.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Workflow ID to fix',
+        },
+        apply: {
+          type: 'boolean',
+          description: 'Apply fixes to n8n (default: false, dry-run)',
+        },
+      },
+      required: ['id'],
+    },
+  },
+
+  {
+    name: 'workflow_format',
+    description: 'Format a workflow: sort nodes by position, clean up null values.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Workflow ID to format',
+        },
+        apply: {
+          type: 'boolean',
+          description: 'Apply formatting to n8n (default: false)',
+        },
+      },
+      required: ['id'],
+    },
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // Version Control
+  // ─────────────────────────────────────────────────────────────
+  {
+    name: 'version_list',
+    description: 'List saved versions of a workflow (local snapshots).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflowId: {
+          type: 'string',
+          description: 'Workflow ID',
+        },
+      },
+      required: ['workflowId'],
+    },
+  },
+
+  {
+    name: 'version_get',
+    description: 'Get a specific saved version of a workflow.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflowId: {
+          type: 'string',
+          description: 'Workflow ID',
+        },
+        versionId: {
+          type: 'string',
+          description: 'Version ID (from version_list)',
+        },
+      },
+      required: ['workflowId', 'versionId'],
+    },
+  },
+
+  {
+    name: 'version_save',
+    description: 'Manually save a version snapshot of a workflow.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflowId: {
+          type: 'string',
+          description: 'Workflow ID',
+        },
+        reason: {
+          type: 'string',
+          description: 'Reason for saving (default: "manual")',
+        },
+      },
+      required: ['workflowId'],
+    },
+  },
+
+  {
+    name: 'version_rollback',
+    description: 'Restore a workflow to a previous version.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflowId: {
+          type: 'string',
+          description: 'Workflow ID',
+        },
+        versionId: {
+          type: 'string',
+          description: 'Version ID to restore',
+        },
+      },
+      required: ['workflowId', 'versionId'],
+    },
+  },
+
+  {
+    name: 'version_diff',
+    description: 'Compare two versions of a workflow or current state vs a version.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflowId: {
+          type: 'string',
+          description: 'Workflow ID',
+        },
+        fromVersionId: {
+          type: 'string',
+          description: 'First version ID (omit for current workflow state)',
+        },
+        toVersionId: {
+          type: 'string',
+          description: 'Second version ID',
+        },
+      },
+      required: ['workflowId', 'toVersionId'],
+    },
+  },
+
+  {
+    name: 'version_stats',
+    description: 'Get version control statistics.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
     },
   },
 ];

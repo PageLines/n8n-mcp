@@ -55,6 +55,8 @@ Add to your MCP settings (`~/.claude/mcp.json` or IDE config):
 |----------|-------------|
 | `N8N_API_URL` | Your n8n instance URL |
 | `N8N_API_KEY` | API key from n8n settings |
+| `N8N_MCP_VERSIONS` | Enable version control (default: true, set to "false" to disable) |
+| `N8N_MCP_MAX_VERSIONS` | Max versions to keep per workflow (default: 20) |
 
 ## Tools
 
