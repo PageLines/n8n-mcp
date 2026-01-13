@@ -1,6 +1,8 @@
 # Node Configuration Guidelines
 
-> Settings that make AI-created nodes human-editable
+> Settings that make AI-created nodes human-editable.
+>
+> **Node types are validated.** Invalid types are blocked with suggestions before hitting n8n. Use `node_types_list` to discover available nodes.
 
 ## Resource Locator Pattern
 

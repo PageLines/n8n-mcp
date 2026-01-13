@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2025-01-13
+
+### Added
+
+#### Node Type Discovery & Validation
+- `node_types_list` - Search available node types by name/category
+- Pre-validation blocks invalid node types before `workflow_create` and `workflow_update`
+- Fuzzy matching suggests correct types when invalid types detected
+
+#### Auto-Cleanup Pipeline
+- Every `workflow_create` and `workflow_update` now automatically:
+  - Validates node types (blocks if invalid)
+  - Runs validation rules
+  - Auto-fixes fixable issues (snake_case, $json refs, AI settings)
+  - Formats workflow (sorts nodes, removes nulls)
+  - Returns only unfixable warnings
+
+#### Response Formatting
+- New `format` parameter on workflow/execution tools: `compact` (default), `summary`, `full`
+- Token-efficient responses (88% reduction with compact, 98% with summary)
+
+### Changed
+- Hardcoded secrets: severity `error` → `info` (recommend env vars, don't block)
+- Documentation updated with "opinionated" messaging throughout
+- Added PageLines logo to README
+
 ## [0.2.1] - 2025-01-13
 
 ### Added

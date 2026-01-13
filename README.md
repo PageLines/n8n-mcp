@@ -1,25 +1,30 @@
+<img src="logo.png" width="64" height="64" alt="PageLines">
+
 # n8n MCP Server
 
-Workflow validation, version control, and patch-based updates for n8n.
+**Opinionated** workflow automation for n8n. Enforces best practices, auto-fixes issues, and prevents mistakes.
 
 ## Why This MCP?
 
 **The problem:** Other n8n MCPs replace entire nodes when you update one field. Change a message? Lose your channel ID, auth settings, everything else. No undo. And they bundle 70MB of node docs you can just Google.
 
-**This MCP:**
+**This MCP is opinionated:**
 - **Patches, not replaces** - Update one field, keep everything else
+- **Auto-cleanup** - Every create/update validates, auto-fixes, and formats automatically
 - **Auto-snapshots** - Every mutation saves a version first. Always have rollback.
-- **Validates expressions** - Catches `$json` refs that break on reorder, circular dependencies, missing nodes
-- **Auto-fixes** - Renames to snake_case, converts `$json` to explicit `$('node')` refs
-- **Lightweight** - 1,200 lines, zero runtime dependencies
+- **Node type validation** - Blocks invalid node types with suggestions before they hit n8n
+- **Expression validation** - Catches `$json` refs that break on reorder, circular deps, missing nodes
+- **Enforces conventions** - snake_case naming, explicit references, recommends env vars
+- **Lightweight** - ~1,500 lines, zero runtime dependencies
 
 | | This MCP | Others |
 |--|----------|--------|
 | Update a node | Preserves untouched params | Loses them |
+| After create/update | Auto-validates, auto-fixes, formats | Manual cleanup |
+| Invalid node types | Blocked with suggestions | API error |
 | Before mutations | Auto-saves version | Hope you backed up |
 | Expression validation | Syntax, refs, circular deps | Basic |
-| Auto-fix issues | Yes | No |
-| Size | ~1,200 LOC | 10k+ LOC, 70MB SQLite |
+| Size | ~1,500 LOC | 10k+ LOC, 70MB SQLite |
 
 ## Setup
 
@@ -53,16 +58,20 @@ No install step needed - npx handles it.
 | Workflow | `list` `get` `create` `update` `delete` `activate` `deactivate` `execute` |
 | Execution | `list` `get` |
 | Validation | `validate` `autofix` `format` |
+| Discovery | `node_types_list` |
 | Versions | `list` `get` `save` `rollback` `diff` `stats` |
 
-### Validation Rules
+### Opinions Enforced
+
+These rules are checked and auto-fixed on every `workflow_create` and `workflow_update`:
 
 | Rule | Severity | Auto-fix |
 |------|----------|----------|
 | snake_case naming | warning | Yes |
 | Explicit refs (`$('node')` not `$json`) | warning | Yes |
-| AI structured output | warning | Yes |
-| Hardcoded secrets | error | No |
+| AI structured output settings | warning | Yes |
+| Invalid node types | error | Blocked |
+| Hardcoded secrets | info | No |
 | Orphan nodes | warning | No |
 | Expression syntax | error | No |
 | Circular references | error | No |

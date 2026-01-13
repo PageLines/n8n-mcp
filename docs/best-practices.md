@@ -1,5 +1,7 @@
 # n8n Best Practices
 
+> **These rules are automatically enforced.** The MCP validates, auto-fixes, and formats on every `workflow_create` and `workflow_update`. You'll only see warnings for issues that can't be auto-fixed.
+
 ## Quick Reference
 
 ```javascript
@@ -21,16 +23,16 @@
 
 ## The Rules
 
-### 1. snake_case
+### 1. snake_case (auto-fixed)
 
 ```
 Good: fetch_articles, check_approved, generate_content
 Bad:  FetchArticles, Check Approved, generate-content
 ```
 
-Why: Consistency, readability, auto-fixable.
+Why: Consistency, readability. **Auto-fixed:** renamed automatically with all references updated.
 
-### 2. Explicit References
+### 2. Explicit References (auto-fixed)
 
 ```javascript
 // Bad - breaks when flow changes
@@ -40,7 +42,7 @@ Why: Consistency, readability, auto-fixable.
 {{ $('node_name').item.json.field }}
 ```
 
-Why: `$json` references "previous node" implicitly. Reorder nodes, it breaks.
+Why: `$json` references "previous node" implicitly. Reorder nodes, it breaks. **Auto-fixed:** converted to explicit `$('prev_node')` references.
 
 ### 3. Config Node
 
@@ -63,15 +65,17 @@ Reference everywhere: `{{ $('config').item.json.channel_id }}`
 
 Why: Change once, not in 5 nodes.
 
-### 4. Secrets in Environment
+### 4. Secrets in Environment (recommended)
 
 ```javascript
-// Bad
+// Hardcoded (works, but less portable)
 { "apiKey": "sk_live_abc123" }
 
-// Good
+// Environment variable (recommended)
 {{ $env.API_KEY }}
 ```
+
+Why: Env vars make workflows portable across environments and avoid committing secrets.
 
 ## Parameter Preservation
 
@@ -107,9 +111,9 @@ Before updating: read current state with `workflow_get`.
 
 ## AI Nodes
 
-### Structured Output
+### Structured Output (auto-fixed)
 
-Always set for predictable JSON:
+Always set for predictable JSON. **Auto-fixed:** `promptType: "define"` and `hasOutputParser: true` added automatically.
 
 | Setting | Value |
 |---------|-------|
@@ -149,7 +153,8 @@ When code IS necessary:
 | 2. List versions | Know rollback point |
 | 3. Read full workflow | Understand current state |
 | 4. Make targeted change | Minimal surface area |
-| 5. Validate after | Catch issues immediately |
+
+> **Note:** Validation and cleanup are now automatic. Every create/update validates, auto-fixes, and formats automatically.
 
 ## Node-Specific Settings
 

@@ -10,6 +10,7 @@ import type {
   N8nExecutionListItem,
   N8nListResponse,
   N8nNode,
+  N8nNodeType,
   PatchOperation,
 } from './types.js';
 
@@ -95,9 +96,11 @@ export class N8nClient {
 
   async updateWorkflow(
     id: string,
-    workflow: Partial<Omit<N8nWorkflow, 'id' | 'createdAt' | 'updatedAt'>>
+    workflow: Partial<N8nWorkflow>
   ): Promise<N8nWorkflow> {
-    return this.request('PUT', `/api/v1/workflows/${id}`, workflow);
+    // Strip properties that n8n API doesn't accept on PUT
+    const { id: _id, createdAt, updatedAt, active, versionId, ...allowed } = workflow as any;
+    return this.request('PUT', `/api/v1/workflows/${id}`, allowed);
   }
 
   async deleteWorkflow(id: string): Promise<void> {
@@ -357,5 +360,13 @@ export class N8nClient {
         error: error instanceof Error ? error.message : String(error),
       };
     }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // Node Types
+  // ─────────────────────────────────────────────────────────────
+
+  async listNodeTypes(): Promise<N8nNodeType[]> {
+    return this.request<N8nNodeType[]>('GET', '/api/v1/nodes');
   }
 }

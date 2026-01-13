@@ -29,13 +29,18 @@ export const tools: Tool[] = [
 
   {
     name: 'workflow_get',
-    description: 'Get a workflow by ID. Returns full workflow with nodes, connections, settings.',
+    description: 'Get a workflow by ID. Use format=summary for minimal response, compact (default) for nodes without parameters, full for everything.',
     inputSchema: {
       type: 'object',
       properties: {
         id: {
           type: 'string',
           description: 'Workflow ID',
+        },
+        format: {
+          type: 'string',
+          enum: ['summary', 'compact', 'full'],
+          description: 'Response detail level. summary=minimal, compact=nodes without params (default), full=everything',
         },
       },
       required: ['id'],
@@ -44,7 +49,7 @@ export const tools: Tool[] = [
 
   {
     name: 'workflow_create',
-    description: 'Create a new workflow. Returns the created workflow.',
+    description: 'Create a new workflow. Returns the created workflow with validation.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -80,6 +85,11 @@ export const tools: Tool[] = [
         settings: {
           type: 'object',
           description: 'Workflow settings',
+        },
+        format: {
+          type: 'string',
+          enum: ['summary', 'compact', 'full'],
+          description: 'Response detail level (default: compact)',
         },
       },
       required: ['name', 'nodes', 'connections'],
@@ -137,6 +147,11 @@ Example: { "operations": [{ "type": "updateNode", "nodeName": "my_node", "proper
             },
             required: ['type'],
           },
+        },
+        format: {
+          type: 'string',
+          enum: ['summary', 'compact', 'full'],
+          description: 'Response detail level (default: compact)',
         },
       },
       required: ['id', 'operations'],
@@ -229,19 +244,29 @@ Example: { "operations": [{ "type": "updateNode", "nodeName": "my_node", "proper
           type: 'number',
           description: 'Max results (default 20)',
         },
+        format: {
+          type: 'string',
+          enum: ['summary', 'compact', 'full'],
+          description: 'Response detail level (default: compact)',
+        },
       },
     },
   },
 
   {
     name: 'execution_get',
-    description: 'Get execution details including run data and errors.',
+    description: 'Get execution details. Use format=summary for status only, compact (default) omits runData, full for everything including runData.',
     inputSchema: {
       type: 'object',
       properties: {
         id: {
           type: 'string',
           description: 'Execution ID',
+        },
+        format: {
+          type: 'string',
+          enum: ['summary', 'compact', 'full'],
+          description: 'Response detail level. summary=status only, compact=no runData (default), full=everything',
         },
       },
       required: ['id'],
@@ -316,6 +341,36 @@ Returns the fixed workflow and list of changes made.`,
   },
 
   // ─────────────────────────────────────────────────────────────
+  // Node Discovery
+  // ─────────────────────────────────────────────────────────────
+  {
+    name: 'node_types_list',
+    description: `List available n8n node types. Use this to discover valid node types BEFORE creating workflows.
+
+Returns: type name, display name, description, category, and version for each node.
+Use the search parameter to filter by keyword (searches type name, display name, and description).
+
+IMPORTANT: Always check node types exist before using them in workflow_create or workflow_update.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        search: {
+          type: 'string',
+          description: 'Filter nodes by keyword (searches name, type, description)',
+        },
+        category: {
+          type: 'string',
+          description: 'Filter by category (e.g., "Core Nodes", "Flow", "AI")',
+        },
+        limit: {
+          type: 'number',
+          description: 'Max results (default 50)',
+        },
+      },
+    },
+  },
+
+  // ─────────────────────────────────────────────────────────────
   // Version Control
   // ─────────────────────────────────────────────────────────────
   {
@@ -346,6 +401,11 @@ Returns the fixed workflow and list of changes made.`,
         versionId: {
           type: 'string',
           description: 'Version ID (from version_list)',
+        },
+        format: {
+          type: 'string',
+          enum: ['summary', 'compact', 'full'],
+          description: 'Response detail level (default: compact)',
         },
       },
       required: ['workflowId', 'versionId'],
@@ -384,6 +444,11 @@ Returns the fixed workflow and list of changes made.`,
         versionId: {
           type: 'string',
           description: 'Version ID to restore',
+        },
+        format: {
+          type: 'string',
+          enum: ['summary', 'compact', 'full'],
+          description: 'Response detail level (default: compact)',
         },
       },
       required: ['workflowId', 'versionId'],

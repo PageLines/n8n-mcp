@@ -13,7 +13,7 @@ import {
 
 import { N8nClient } from './n8n-client.js';
 import { tools } from './tools.js';
-import { validateWorkflow } from './validators.js';
+import { validateWorkflow, validateNodeTypes } from './validators.js';
 import { validateExpressions, checkCircularReferences } from './expressions.js';
 import { autofixWorkflow, formatWorkflow } from './autofix.js';
 import {
@@ -24,7 +24,14 @@ import {
   diffWorkflows,
   getVersionStats,
 } from './versions.js';
-import type { PatchOperation, N8nConnections } from './types.js';
+import {
+  formatWorkflowResponse,
+  formatExecutionResponse,
+  formatExecutionListResponse,
+  stringifyResponse,
+  type ResponseFormat,
+} from './response-format.js';
+import type { PatchOperation, N8nConnections, N8nNodeTypeSummary } from './types.js';
 
 // ─────────────────────────────────────────────────────────────
 // Configuration
@@ -57,7 +64,7 @@ initVersionControl({
 const server = new Server(
   {
     name: '@pagelines/n8n-mcp',
-    version: '0.1.0',
+    version: '0.3.0',
   },
   {
     capabilities: {
@@ -81,7 +88,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       content: [
         {
           type: 'text',
-          text: typeof result === 'string' ? result : JSON.stringify(result, null, 2),
+          // Use minified JSON to reduce token usage
+          text: typeof result === 'string' ? result : stringifyResponse(result),
         },
       ],
     };
@@ -124,18 +132,40 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
 
     case 'workflow_get': {
       const workflow = await client.getWorkflow(args.id as string);
-      return workflow;
+      const format = (args.format as ResponseFormat) || 'compact';
+      return formatWorkflowResponse(workflow, format);
     }
 
     case 'workflow_create': {
-      const nodes = (args.nodes as Array<{
+      const inputNodes = args.nodes as Array<{
         name: string;
         type: string;
         typeVersion: number;
         position: [number, number];
         parameters: Record<string, unknown>;
         credentials?: Record<string, { id: string; name: string }>;
-      }>).map((n, i) => ({
+      }>;
+
+      // Validate node types BEFORE creating workflow
+      const availableTypes = await client.listNodeTypes();
+      const validTypeSet = new Set(availableTypes.map((nt) => nt.name));
+      const typeErrors = validateNodeTypes(inputNodes, validTypeSet);
+
+      if (typeErrors.length > 0) {
+        const errorMessages = typeErrors.map((e) => {
+          let msg = e.message;
+          if (e.suggestions && e.suggestions.length > 0) {
+            msg += `. Did you mean: ${e.suggestions.join(', ')}?`;
+          }
+          return msg;
+        });
+        throw new Error(
+          `Invalid node types detected:\n${errorMessages.join('\n')}\n\n` +
+            `Use node_types_list to discover available node types.`
+        );
+      }
+
+      const nodes = inputNodes.map((n, i) => ({
         id: crypto.randomUUID(),
         name: n.name,
         type: n.type,
@@ -145,40 +175,100 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
         ...(n.credentials && { credentials: n.credentials }),
       }));
 
-      const workflow = await client.createWorkflow({
+      let workflow = await client.createWorkflow({
         name: args.name as string,
         nodes,
         connections: (args.connections as N8nConnections) || {},
         settings: args.settings as Record<string, unknown>,
       });
 
-      // Validate the new workflow
+      // Validate and auto-cleanup
       const validation = validateWorkflow(workflow);
+      const autofix = autofixWorkflow(workflow, validation.warnings);
+      let formatted = formatWorkflow(autofix.workflow);
+
+      // Apply cleanup if there were fixes or formatting changes
+      if (autofix.fixes.length > 0 || JSON.stringify(workflow) !== JSON.stringify(formatted)) {
+        workflow = await client.updateWorkflow(workflow.id, formatted);
+        formatted = workflow;
+      }
+
+      const format = (args.format as ResponseFormat) || 'compact';
 
       return {
-        workflow,
-        validation,
+        workflow: formatWorkflowResponse(formatted, format),
+        validation: {
+          ...validation,
+          warnings: autofix.unfixable, // Only show unfixable warnings
+        },
+        autoFixed: autofix.fixes.length > 0 ? autofix.fixes : undefined,
       };
     }
 
     case 'workflow_update': {
+      const operations = args.operations as PatchOperation[];
+
+      // Extract addNode operations that need validation
+      const addNodeOps = operations.filter(
+        (op): op is Extract<PatchOperation, { type: 'addNode' }> =>
+          op.type === 'addNode'
+      );
+
+      if (addNodeOps.length > 0) {
+        // Fetch available types and validate
+        const availableTypes = await client.listNodeTypes();
+        const validTypeSet = new Set(availableTypes.map((nt) => nt.name));
+        const nodesToValidate = addNodeOps.map((op) => ({
+          name: op.node.name,
+          type: op.node.type,
+        }));
+        const typeErrors = validateNodeTypes(nodesToValidate, validTypeSet);
+
+        if (typeErrors.length > 0) {
+          const errorMessages = typeErrors.map((e) => {
+            let msg = e.message;
+            if (e.suggestions && e.suggestions.length > 0) {
+              msg += `. Did you mean: ${e.suggestions.join(', ')}?`;
+            }
+            return msg;
+          });
+          throw new Error(
+            `Invalid node types in addNode operations:\n${errorMessages.join('\n')}\n\n` +
+              `Use node_types_list to discover available node types.`
+          );
+        }
+      }
+
       // Save version before updating
       const currentWorkflow = await client.getWorkflow(args.id as string);
       const versionSaved = await saveVersion(currentWorkflow, 'before_update');
 
-      const operations = args.operations as PatchOperation[];
-      const { workflow, warnings } = await client.patchWorkflow(
+      let { workflow, warnings } = await client.patchWorkflow(
         args.id as string,
         operations
       );
 
-      // Also run validation
+      // Validate and auto-cleanup
       const validation = validateWorkflow(workflow);
+      const autofix = autofixWorkflow(workflow, validation.warnings);
+      let formatted = formatWorkflow(autofix.workflow);
+
+      // Apply cleanup if there were fixes or formatting changes
+      if (autofix.fixes.length > 0 || JSON.stringify(workflow) !== JSON.stringify(formatted)) {
+        workflow = await client.updateWorkflow(args.id as string, formatted);
+        formatted = workflow;
+      }
+
+      const format = (args.format as ResponseFormat) || 'compact';
 
       return {
-        workflow,
+        workflow: formatWorkflowResponse(formatted, format),
         patchWarnings: warnings,
-        validation,
+        validation: {
+          ...validation,
+          warnings: autofix.unfixable, // Only show unfixable warnings
+        },
+        autoFixed: autofix.fixes.length > 0 ? autofix.fixes : undefined,
         versionSaved: versionSaved ? versionSaved.id : null,
       };
     }
@@ -221,15 +311,17 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
         status: args.status as 'success' | 'error' | 'waiting' | undefined,
         limit: (args.limit as number) || 20,
       });
+      const format = (args.format as ResponseFormat) || 'compact';
       return {
-        executions: response.data,
+        executions: formatExecutionListResponse(response.data, format),
         total: response.data.length,
       };
     }
 
     case 'execution_get': {
       const execution = await client.getExecution(args.id as string);
-      return execution;
+      const format = (args.format as ResponseFormat) || 'compact';
+      return formatExecutionResponse(execution, format);
     }
 
     // Validation & Quality
@@ -296,6 +388,48 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
       };
     }
 
+    // Node Discovery
+    case 'node_types_list': {
+      const nodeTypes = await client.listNodeTypes();
+      const search = (args.search as string)?.toLowerCase();
+      const category = args.category as string;
+      const limit = (args.limit as number) || 50;
+
+      let results: N8nNodeTypeSummary[] = nodeTypes.map((nt) => ({
+        type: nt.name,
+        name: nt.displayName,
+        description: nt.description,
+        category: nt.codex?.categories?.[0] || nt.group?.[0] || 'Other',
+        version: nt.version,
+      }));
+
+      // Apply search filter
+      if (search) {
+        results = results.filter(
+          (nt) =>
+            nt.type.toLowerCase().includes(search) ||
+            nt.name.toLowerCase().includes(search) ||
+            nt.description.toLowerCase().includes(search)
+        );
+      }
+
+      // Apply category filter
+      if (category) {
+        results = results.filter((nt) =>
+          nt.category.toLowerCase().includes(category.toLowerCase())
+        );
+      }
+
+      // Apply limit
+      results = results.slice(0, limit);
+
+      return {
+        nodeTypes: results,
+        total: results.length,
+        hint: 'Use the "type" field value when creating nodes (e.g., "n8n-nodes-base.webhook")',
+      };
+    }
+
     // Version Control
     case 'version_list': {
       const versions = await listVersions(args.workflowId as string);
@@ -314,7 +448,11 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
       if (!version) {
         throw new Error(`Version ${args.versionId} not found`);
       }
-      return version;
+      const format = (args.format as ResponseFormat) || 'compact';
+      return {
+        meta: version.meta,
+        workflow: formatWorkflowResponse(version.workflow, format),
+      };
     }
 
     case 'version_save': {
@@ -344,11 +482,12 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
 
       // Apply the old version
       await client.updateWorkflow(args.workflowId as string, version.workflow);
+      const format = (args.format as ResponseFormat) || 'compact';
 
       return {
         success: true,
         restoredVersion: version.meta,
-        workflow: version.workflow,
+        workflow: formatWorkflowResponse(version.workflow, format),
       };
     }
 
