@@ -13,7 +13,7 @@ import {
 
 import { N8nClient } from './n8n-client.js';
 import { tools } from './tools.js';
-import { validateWorkflow, validateNodeTypes } from './validators.js';
+import { validateWorkflow } from './validators.js';
 import { validateExpressions, checkCircularReferences } from './expressions.js';
 import { autofixWorkflow, formatWorkflow } from './autofix.js';
 import {
@@ -31,7 +31,7 @@ import {
   stringifyResponse,
   type ResponseFormat,
 } from './response-format.js';
-import type { PatchOperation, N8nConnections, N8nNodeTypeSummary } from './types.js';
+import type { PatchOperation, N8nConnections } from './types.js';
 
 // ─────────────────────────────────────────────────────────────
 // Configuration
@@ -64,7 +64,7 @@ initVersionControl({
 const server = new Server(
   {
     name: '@pagelines/n8n-mcp',
-    version: '0.3.1',
+    version: '0.3.2',
   },
   {
     capabilities: {
@@ -146,25 +146,6 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
         credentials?: Record<string, { id: string; name: string }>;
       }>;
 
-      // Validate node types BEFORE creating workflow
-      const availableTypes = await client.listNodeTypes();
-      const validTypeSet = new Set(availableTypes.map((nt) => nt.name));
-      const typeErrors = validateNodeTypes(inputNodes, validTypeSet);
-
-      if (typeErrors.length > 0) {
-        const errorMessages = typeErrors.map((e) => {
-          let msg = e.message;
-          if (e.suggestions && e.suggestions.length > 0) {
-            msg += `. Did you mean: ${e.suggestions.join(', ')}?`;
-          }
-          return msg;
-        });
-        throw new Error(
-          `Invalid node types detected:\n${errorMessages.join('\n')}\n\n` +
-            `Use node_types_list to discover available node types.`
-        );
-      }
-
       const nodes = inputNodes.map((n, i) => ({
         id: crypto.randomUUID(),
         name: n.name,
@@ -207,37 +188,6 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
 
     case 'workflow_update': {
       const operations = args.operations as PatchOperation[];
-
-      // Extract addNode operations that need validation
-      const addNodeOps = operations.filter(
-        (op): op is Extract<PatchOperation, { type: 'addNode' }> =>
-          op.type === 'addNode'
-      );
-
-      if (addNodeOps.length > 0) {
-        // Fetch available types and validate
-        const availableTypes = await client.listNodeTypes();
-        const validTypeSet = new Set(availableTypes.map((nt) => nt.name));
-        const nodesToValidate = addNodeOps.map((op) => ({
-          name: op.node.name,
-          type: op.node.type,
-        }));
-        const typeErrors = validateNodeTypes(nodesToValidate, validTypeSet);
-
-        if (typeErrors.length > 0) {
-          const errorMessages = typeErrors.map((e) => {
-            let msg = e.message;
-            if (e.suggestions && e.suggestions.length > 0) {
-              msg += `. Did you mean: ${e.suggestions.join(', ')}?`;
-            }
-            return msg;
-          });
-          throw new Error(
-            `Invalid node types in addNode operations:\n${errorMessages.join('\n')}\n\n` +
-              `Use node_types_list to discover available node types.`
-          );
-        }
-      }
 
       // Save version before updating
       const currentWorkflow = await client.getWorkflow(args.id as string);
@@ -385,48 +335,6 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
       return {
         applied: false,
         previewWorkflow: formatted,
-      };
-    }
-
-    // Node Discovery
-    case 'node_types_list': {
-      const nodeTypes = await client.listNodeTypes();
-      const search = (args.search as string)?.toLowerCase();
-      const category = args.category as string;
-      const limit = (args.limit as number) || 50;
-
-      let results: N8nNodeTypeSummary[] = nodeTypes.map((nt) => ({
-        type: nt.name,
-        name: nt.displayName,
-        description: nt.description,
-        category: nt.codex?.categories?.[0] || nt.group?.[0] || 'Other',
-        version: nt.version,
-      }));
-
-      // Apply search filter
-      if (search) {
-        results = results.filter(
-          (nt) =>
-            nt.type.toLowerCase().includes(search) ||
-            nt.name.toLowerCase().includes(search) ||
-            nt.description.toLowerCase().includes(search)
-        );
-      }
-
-      // Apply category filter
-      if (category) {
-        results = results.filter((nt) =>
-          nt.category.toLowerCase().includes(category.toLowerCase())
-        );
-      }
-
-      // Apply limit
-      results = results.slice(0, limit);
-
-      return {
-        nodeTypes: results,
-        total: results.length,
-        hint: 'Use the "type" field value when creating nodes (e.g., "n8n-nodes-base.webhook")',
       };
     }
 

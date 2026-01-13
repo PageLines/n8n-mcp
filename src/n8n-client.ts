@@ -12,7 +12,6 @@ import {
   type N8nExecutionListItem,
   type N8nListResponse,
   type N8nNode,
-  type N8nNodeType,
   type PatchOperation,
 } from './types.js';
 
@@ -364,11 +363,4 @@ export class N8nClient {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // Node Types
-  // ─────────────────────────────────────────────────────────────
-
-  async listNodeTypes(): Promise<N8nNodeType[]> {
-    return this.request<N8nNodeType[]>('GET', '/api/v1/nodes');
-  }
 }

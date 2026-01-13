@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2025-01-13
+
+### Removed
+- `node_types_list` tool - n8n API doesn't reliably expose node types across versions
+- Node type pre-validation from `workflow_create` and `workflow_update` - without reliable API, validation was causing false 404 errors
+
+### Fixed
+- `workflow_update` failing with "request/body/tags is read-only" error
+- Removed `tags` from `N8N_WORKFLOW_WRITABLE_FIELDS` since it's read-only in some n8n versions
+
 ## [0.3.1] - 2025-01-13
 
 ### Fixed
@@ -18,14 +28,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-#### Node Type Discovery & Validation
-- `node_types_list` - Search available node types by name/category
-- Pre-validation blocks invalid node types before `workflow_create` and `workflow_update`
-- Fuzzy matching suggests correct types when invalid types detected
-
 #### Auto-Cleanup Pipeline
 - Every `workflow_create` and `workflow_update` now automatically:
-  - Validates node types (blocks if invalid)
   - Runs validation rules
   - Auto-fixes fixable issues (snake_case, $json refs, AI settings)
   - Formats workflow (sorts nodes, removes nulls)

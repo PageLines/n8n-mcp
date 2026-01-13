@@ -8,7 +8,6 @@ import type {
   N8nNode,
   ValidationResult,
   ValidationWarning,
-  NodeTypeValidationError,
 } from './types.js';
 
 export function validateWorkflow(workflow: N8nWorkflow): ValidationResult {
@@ -288,107 +287,4 @@ export function validatePartialUpdate(
   }
 
   return warnings;
-}
-
-// ─────────────────────────────────────────────────────────────
-// Node Type Validation
-// ─────────────────────────────────────────────────────────────
-
-/**
- * Validate that all node types in an array exist in the available types
- * Returns errors for any invalid node types with suggestions
- */
-export function validateNodeTypes(
-  nodes: Array<{ name: string; type: string }>,
-  availableTypes: Set<string>
-): NodeTypeValidationError[] {
-  const errors: NodeTypeValidationError[] = [];
-
-  for (const node of nodes) {
-    if (!availableTypes.has(node.type)) {
-      errors.push({
-        nodeType: node.type,
-        nodeName: node.name,
-        message: `Invalid node type "${node.type}" for node "${node.name}"`,
-        suggestions: findSimilarTypes(node.type, availableTypes),
-      });
-    }
-  }
-
-  return errors;
-}
-
-/**
- * Find similar node types for suggestions (fuzzy matching)
- * Returns up to 3 suggestions
- */
-function findSimilarTypes(invalidType: string, availableTypes: Set<string>): string[] {
-  const suggestions: string[] = [];
-  const searchTerm = invalidType.toLowerCase();
-
-  // Extract the last part after the dot (e.g., "webhook" from "n8n-nodes-base.webhook")
-  const typeParts = searchTerm.split('.');
-  const shortName = typeParts[typeParts.length - 1];
-
-  for (const validType of availableTypes) {
-    const validLower = validType.toLowerCase();
-    const validShortName = validLower.split('.').pop() || '';
-
-    // Check for partial matches (substring)
-    if (
-      validLower.includes(shortName) ||
-      shortName.includes(validShortName) ||
-      validShortName.includes(shortName)
-    ) {
-      suggestions.push(validType);
-      if (suggestions.length >= 3) break;
-      continue;
-    }
-
-    // Check for typos using Levenshtein distance
-    const distance = levenshteinDistance(shortName, validShortName);
-    const maxLen = Math.max(shortName.length, validShortName.length);
-    // Allow up to 2 character differences for short names, or 20% of length for longer ones
-    const threshold = Math.max(2, Math.floor(maxLen * 0.2));
-    if (distance <= threshold) {
-      suggestions.push(validType);
-      if (suggestions.length >= 3) break;
-    }
-  }
-
-  return suggestions;
-}
-
-/**
- * Calculate Levenshtein distance between two strings
- */
-function levenshteinDistance(a: string, b: string): number {
-  if (a.length === 0) return b.length;
-  if (b.length === 0) return a.length;
-
-  const matrix: number[][] = [];
-
-  // Initialize first column
-  for (let i = 0; i <= a.length; i++) {
-    matrix[i] = [i];
-  }
-
-  // Initialize first row
-  for (let j = 0; j <= b.length; j++) {
-    matrix[0][j] = j;
-  }
-
-  // Fill in the rest of the matrix
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,      // deletion
-        matrix[i][j - 1] + 1,      // insertion
-        matrix[i - 1][j - 1] + cost // substitution
-      );
-    }
-  }
-
-  return matrix[a.length][b.length];
 }

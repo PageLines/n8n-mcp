@@ -126,7 +126,7 @@ export const N8N_WORKFLOW_WRITABLE_FIELDS = [
   'connections',
   'settings',
   'staticData',
-  'tags',
+  // Note: 'tags' is read-only in some n8n versions
 ] as const;
 
 export type N8nWorkflowWritableField = (typeof N8N_WORKFLOW_WRITABLE_FIELDS)[number];
@@ -147,37 +147,4 @@ export function pickFields<T, K extends keyof T>(
     }
   }
   return result;
-}
-
-// Node type information from n8n API (GET /api/v1/nodes)
-export interface N8nNodeType {
-  name: string;           // e.g., "n8n-nodes-base.webhook"
-  displayName: string;    // e.g., "Webhook"
-  description: string;
-  group: string[];        // e.g., ["trigger"]
-  version: number;
-  defaults?: {
-    name: string;
-  };
-  codex?: {
-    categories?: string[];
-    alias?: string[];
-  };
-}
-
-// Simplified node type for tool responses (reduced tokens)
-export interface N8nNodeTypeSummary {
-  type: string;           // Full type name
-  name: string;           // Display name
-  description: string;
-  category: string;
-  version: number;
-}
-
-// Node type validation error
-export interface NodeTypeValidationError {
-  nodeType: string;
-  nodeName: string;
-  message: string;
-  suggestions?: string[];
 }

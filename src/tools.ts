@@ -341,36 +341,6 @@ Returns the fixed workflow and list of changes made.`,
   },
 
   // ─────────────────────────────────────────────────────────────
-  // Node Discovery
-  // ─────────────────────────────────────────────────────────────
-  {
-    name: 'node_types_list',
-    description: `List available n8n node types. Use this to discover valid node types BEFORE creating workflows.
-
-Returns: type name, display name, description, category, and version for each node.
-Use the search parameter to filter by keyword (searches type name, display name, and description).
-
-IMPORTANT: Always check node types exist before using them in workflow_create or workflow_update.`,
-    inputSchema: {
-      type: 'object',
-      properties: {
-        search: {
-          type: 'string',
-          description: 'Filter nodes by keyword (searches name, type, description)',
-        },
-        category: {
-          type: 'string',
-          description: 'Filter by category (e.g., "Core Nodes", "Flow", "AI")',
-        },
-        limit: {
-          type: 'number',
-          description: 'Max results (default 50)',
-        },
-      },
-    },
-  },
-
-  // ─────────────────────────────────────────────────────────────
   // Version Control
   // ─────────────────────────────────────────────────────────────
   {

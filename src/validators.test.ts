@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateWorkflow, validatePartialUpdate, validateNodeTypes } from './validators.js';
+import { validateWorkflow, validatePartialUpdate } from './validators.js';
 import type { N8nWorkflow } from './types.js';
 
 const createWorkflow = (overrides: Partial<N8nWorkflow> = {}): N8nWorkflow => ({
@@ -272,103 +272,5 @@ describe('validatePartialUpdate', () => {
     });
 
     expect(warnings).toHaveLength(0);
-  });
-});
-
-describe('validateNodeTypes', () => {
-  const availableTypes = new Set([
-    'n8n-nodes-base.webhook',
-    'n8n-nodes-base.set',
-    'n8n-nodes-base.code',
-    'n8n-nodes-base.httpRequest',
-    '@n8n/n8n-nodes-langchain.agent',
-    '@n8n/n8n-nodes-langchain.chatTrigger',
-  ]);
-
-  it('passes when all node types are valid', () => {
-    const nodes = [
-      { name: 'webhook_trigger', type: 'n8n-nodes-base.webhook' },
-      { name: 'set_data', type: 'n8n-nodes-base.set' },
-      { name: 'ai_agent', type: '@n8n/n8n-nodes-langchain.agent' },
-    ];
-
-    const errors = validateNodeTypes(nodes, availableTypes);
-    expect(errors).toHaveLength(0);
-  });
-
-  it('returns error for invalid node type', () => {
-    const nodes = [
-      { name: 'my_node', type: 'n8n-nodes-base.nonexistent' },
-    ];
-
-    const errors = validateNodeTypes(nodes, availableTypes);
-    expect(errors).toHaveLength(1);
-    expect(errors[0]).toEqual(
-      expect.objectContaining({
-        nodeType: 'n8n-nodes-base.nonexistent',
-        nodeName: 'my_node',
-      })
-    );
-  });
-
-  it('returns errors for multiple invalid node types', () => {
-    const nodes = [
-      { name: 'valid_node', type: 'n8n-nodes-base.webhook' },
-      { name: 'invalid_one', type: 'n8n-nodes-base.fake' },
-      { name: 'invalid_two', type: 'n8n-nodes-base.bogus' },
-    ];
-
-    const errors = validateNodeTypes(nodes, availableTypes);
-    expect(errors).toHaveLength(2);
-    expect(errors.map((e) => e.nodeName)).toEqual(['invalid_one', 'invalid_two']);
-  });
-
-  it('provides suggestions for typos', () => {
-    const nodes = [
-      { name: 'trigger', type: 'n8n-nodes-base.webhok' }, // typo: webhok
-    ];
-
-    const errors = validateNodeTypes(nodes, availableTypes);
-    expect(errors).toHaveLength(1);
-    expect(errors[0].suggestions).toContain('n8n-nodes-base.webhook');
-  });
-
-  it('provides suggestions for partial matches', () => {
-    const nodes = [
-      { name: 'code_node', type: 'n8n-nodes-base.cod' }, // partial: cod
-    ];
-
-    const errors = validateNodeTypes(nodes, availableTypes);
-    expect(errors).toHaveLength(1);
-    expect(errors[0].suggestions).toContain('n8n-nodes-base.code');
-  });
-
-  it('returns empty suggestions when no matches found', () => {
-    const nodes = [
-      { name: 'xyz_node', type: 'n8n-nodes-base.xyz123completely_random' },
-    ];
-
-    const errors = validateNodeTypes(nodes, availableTypes);
-    expect(errors).toHaveLength(1);
-    expect(errors[0].suggestions).toHaveLength(0);
-  });
-
-  it('limits suggestions to 3', () => {
-    // Create a set with many similar types
-    const manyTypes = new Set([
-      'n8n-nodes-base.httpRequest',
-      'n8n-nodes-base.httpRequestTool',
-      'n8n-nodes-base.httpRequestV1',
-      'n8n-nodes-base.httpRequestV2',
-      'n8n-nodes-base.httpRequestV3',
-    ]);
-
-    const nodes = [
-      { name: 'http', type: 'n8n-nodes-base.http' }, // should match multiple
-    ];
-
-    const errors = validateNodeTypes(nodes, manyTypes);
-    expect(errors).toHaveLength(1);
-    expect(errors[0].suggestions!.length).toBeLessThanOrEqual(3);
   });
 });

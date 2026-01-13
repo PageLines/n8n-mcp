@@ -226,48 +226,6 @@ describe('N8nClient', () => {
     });
   });
 
-  describe('listNodeTypes', () => {
-    it('calls correct endpoint', async () => {
-      const mockNodeTypes = [
-        {
-          name: 'n8n-nodes-base.webhook',
-          displayName: 'Webhook',
-          description: 'Starts workflow on webhook call',
-          group: ['trigger'],
-          version: 2,
-        },
-        {
-          name: 'n8n-nodes-base.set',
-          displayName: 'Set',
-          description: 'Set values',
-          group: ['transform'],
-          version: 3,
-        },
-      ];
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        text: async () => JSON.stringify(mockNodeTypes),
-      });
-
-      const result = await client.listNodeTypes();
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        'https://n8n.example.com/api/v1/nodes',
-        expect.objectContaining({
-          method: 'GET',
-          headers: expect.objectContaining({
-            'X-N8N-API-KEY': 'test-api-key',
-          }),
-        })
-      );
-
-      expect(result).toHaveLength(2);
-      expect(result[0].name).toBe('n8n-nodes-base.webhook');
-      expect(result[1].name).toBe('n8n-nodes-base.set');
-    });
-  });
-
   describe('updateWorkflow', () => {
     it('strips disallowed properties before sending to API', async () => {
       const fullWorkflow = {
@@ -308,7 +266,8 @@ describe('N8nClient', () => {
       expect(putBody.connections).toEqual({});
       expect(putBody.settings).toEqual({ timezone: 'UTC' });
       expect(putBody.staticData).toBeUndefined();
-      expect(putBody.tags).toEqual([{ id: 't1', name: 'tag1' }]);
+      // tags is read-only in some n8n versions, so it's stripped
+      expect(putBody.tags).toBeUndefined();
     });
 
     it('works with partial workflow (only some fields)', async () => {
@@ -407,7 +366,8 @@ describe('N8nClient', () => {
       }
 
       // Verify exact expected keys (all writable fields that had values)
-      expect(sentKeys).toEqual(['connections', 'name', 'nodes', 'settings', 'staticData', 'tags']);
+      // tags is read-only in some n8n versions, so it's stripped
+      expect(sentKeys).toEqual(['connections', 'name', 'nodes', 'settings', 'staticData']);
     });
   });
 });
@@ -455,7 +415,8 @@ describe('N8N_WORKFLOW_WRITABLE_FIELDS schema', () => {
     expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('connections');
     expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('settings');
     expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('staticData');
-    expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('tags');
+    // tags is read-only in some n8n versions
+    expect(N8N_WORKFLOW_WRITABLE_FIELDS).not.toContain('tags');
   });
 
   it('does NOT contain read-only fields', () => {
