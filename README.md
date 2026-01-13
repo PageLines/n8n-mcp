@@ -2,27 +2,28 @@
 
 Workflow validation, version control, and patch-based updates for n8n.
 
-## The Problem
+## Why This MCP?
 
-Other n8n MCPs replace entire nodes on update—losing parameters you didn't touch. No rollback. 70MB of SQLite for node docs you can Google.
+**The problem:** Other n8n MCPs replace entire nodes when you update one field. Change a message? Lose your channel ID, auth settings, everything else. No undo. And they bundle 70MB of node docs you can just Google.
 
-## This MCP
+**This MCP:**
+- **Patches, not replaces** - Update one field, keep everything else
+- **Auto-snapshots** - Every mutation saves a version first. Always have rollback.
+- **Validates expressions** - Catches `$json` refs that break on reorder, circular dependencies, missing nodes
+- **Auto-fixes** - Renames to snake_case, converts `$json` to explicit `$('node')` refs
+- **Lightweight** - 1,200 lines, zero runtime dependencies
 
-| Feature | This | Others |
-|---------|------|--------|
-| Update approach | Patch (preserves params) | Replace (loses params) |
-| Version control | Auto-snapshot before mutations | Manual/none |
-| Validation | Expression syntax, circular refs, secrets | Basic |
-| Auto-fix | snake_case, $json→$('node'), AI settings | None |
-| Size | ~1,200 LOC, zero deps | 10k+ LOC, 70MB SQLite |
+| | This MCP | Others |
+|--|----------|--------|
+| Update a node | Preserves untouched params | Loses them |
+| Before mutations | Auto-saves version | Hope you backed up |
+| Expression validation | Syntax, refs, circular deps | Basic |
+| Auto-fix issues | Yes | No |
+| Size | ~1,200 LOC | 10k+ LOC, 70MB SQLite |
 
-## Install
+## Setup
 
-```bash
-npx @pagelines/n8n-mcp
-```
-
-Add to `~/.claude/mcp.json`:
+Add to your MCP client config:
 
 ```json
 {
@@ -39,7 +40,13 @@ Add to `~/.claude/mcp.json`:
 }
 ```
 
-## Tools
+No install step needed - npx handles it.
+
+---
+
+## Reference
+
+### Tools
 
 | Category | Tools |
 |----------|-------|
@@ -48,7 +55,7 @@ Add to `~/.claude/mcp.json`:
 | Validation | `validate` `autofix` `format` |
 | Versions | `list` `get` `save` `rollback` `diff` `stats` |
 
-## Validation
+### Validation Rules
 
 | Rule | Severity | Auto-fix |
 |------|----------|----------|
@@ -60,7 +67,7 @@ Add to `~/.claude/mcp.json`:
 | Expression syntax | error | No |
 | Circular references | error | No |
 
-## Config
+### Config
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -69,10 +76,10 @@ Add to `~/.claude/mcp.json`:
 | `N8N_MCP_VERSIONS` | `true` | Enable version control |
 | `N8N_MCP_MAX_VERSIONS` | `20` | Max snapshots per workflow |
 
-## Docs
+### Docs
 
 - [Best Practices](docs/best-practices.md) - Expression patterns, config nodes, AI settings
-- [Node Config](docs/node-config.md) - Human-editable node settings (`__rl`, Set node, etc.)
+- [Node Config](docs/node-config.md) - Human-editable node settings
 - [Architecture](plans/architecture.md) - Technical reference
 
 ## License
