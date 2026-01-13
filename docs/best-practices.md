@@ -1,59 +1,69 @@
 # n8n Best Practices
 
-> Enforced by `@pagelines/n8n-mcp`
+## Quick Reference
 
-## Guiding Principle
+```javascript
+// Explicit reference (always use this)
+{{ $('node_name').item.json.field }}
 
-**What is most stable and easiest to maintain?**
+// Environment variable
+{{ $env.API_KEY }}
 
-| Rule | Why |
-|------|-----|
-| Minimize nodes | Fewer failure points, easier debugging |
-| YAGNI | Build only what's needed now |
-| Explicit references | `$('node_name')` not `$json` - traceable, stable |
-| snake_case | `node_name` not `NodeName` - consistent, readable |
+// Config node reference
+{{ $('config').item.json.setting }}
 
----
+// Fallback
+{{ $('source').item.json.text || 'default' }}
 
-## Naming Convention
-
-**snake_case everywhere**
-
-```
-Workflows: content_factory, publish_linkedin, upload_image
-Nodes: trigger_webhook, fetch_articles, check_approved
+// Date
+{{ $now.format('yyyy-MM-dd') }}
 ```
 
-Never `NodeName`. Always `node_name`.
+## The Rules
 
----
+### 1. snake_case
 
-## Expression References
+```
+Good: fetch_articles, check_approved, generate_content
+Bad:  FetchArticles, Check Approved, generate-content
+```
 
-**NEVER use `$json`. Always explicit node references.**
+Why: Consistency, readability, auto-fixable.
+
+### 2. Explicit References
 
 ```javascript
 // Bad - breaks when flow changes
 {{ $json.field }}
 
-// Good - traceable and debuggable
+// Good - traceable, stable
 {{ $('node_name').item.json.field }}
-
-// Parallel branch (lookup nodes)
-{{ $('lookup_node').all().length > 0 }}
-
-// Environment variable
-{{ $env.API_KEY }}
-
-// Fallback pattern
-{{ $('source').item.json.text || $('source').item.json.media_url }}
 ```
 
----
+Why: `$json` references "previous node" implicitly. Reorder nodes, it breaks.
 
-## Secrets and Configuration
+### 3. Config Node
 
-**Secrets in environment variables. Always.**
+Single source for workflow settings:
+
+```
+[trigger] → [config] → [rest of workflow]
+```
+
+Config node (JSON mode):
+```javascript
+={
+  "channel_id": "{{ $json.body.channelId || '123456' }}",
+  "max_items": 10,
+  "ai_model": "gpt-4.1-mini"
+}
+```
+
+Reference everywhere: `{{ $('config').item.json.channel_id }}`
+
+Why: Change once, not in 5 nodes.
+
+### 4. Secrets in Environment
 
 ```javascript
 // Bad
@@ -63,45 +73,12 @@ Never `NodeName`. Always `node_name`.
 {{ $env.API_KEY }}
 ```
 
-**For workflow-specific settings, use a config node:**
+## Parameter Preservation
 
-```
-[trigger] → [config] → [rest of workflow]
-```
-
-Config node uses JSON output mode:
-```javascript
-={
-  "channel_id": "{{ $json.body.channelId || '1234567890' }}",
-  "max_items": 10,
-  "ai_model": "gpt-4.1-mini"
-}
-```
-
-Then reference: `{{ $('config').item.json.channel_id }}`
-
----
-
-## Workflow Editing Safety
-
-### The Golden Rule
-
-**Never edit a workflow without explicit confirmation and backup.**
-
-### Pre-Edit Checklist
-
-1. **Confirm** - Get explicit user approval
-2. **List versions** - Know your rollback point
-3. **Read full state** - Understand current config
-4. **Make targeted change** - Use patch operations only
-5. **Verify** - Confirm expected state
-
-### Parameter Preservation
-
-**CRITICAL:** Partial updates REPLACE the entire `parameters` object.
+**Critical:** Partial updates REPLACE the entire `parameters` object.
 
 ```javascript
-// Bad: Only updates messageId, loses operation and labelIds
+// Bad - loses operation and labelIds
 {
   "type": "updateNode",
   "nodeName": "archive_email",
@@ -112,7 +89,7 @@ Then reference: `{{ $('config').item.json.channel_id }}`
   }
 }
 
-// Good: Include ALL required parameters
+// Good - include ALL parameters
 {
   "type": "updateNode",
   "nodeName": "archive_email",
@@ -120,122 +97,64 @@ Then reference: `{{ $('config').item.json.channel_id }}`
     "parameters": {
       "operation": "addLabels",
       "messageId": "={{ $json.message_id }}",
-      "labelIds": ["Label_123", "Label_456"]
+      "labelIds": ["Label_123"]
     }
   }
 }
 ```
 
----
+Before updating: read current state with `workflow_get`.
 
-## Code Nodes
-
-**Code nodes are a last resort.** Exhaust built-in options first:
-
-| Need | Use Instead |
-|------|-------------|
-| Transform fields | Set node with expressions |
-| Filter items | Filter node or If/Switch |
-| Merge data | Merge node |
-| Loop processing | n8n processes arrays natively |
-| Date formatting | `{{ $now.format('yyyy-MM-dd') }}` |
-
-**When code IS necessary:**
-- Re-establishing `pairedItem` after chain breaks
-- Complex conditional logic
-- API response parsing expressions can't handle
-
-**Code node rules:**
-- Single responsibility (one clear purpose)
-- Name it for what it does: `merge_context`, `parse_response`
-- No side effects - pure data transformation
-
----
-
-## AI Agent Best Practices
+## AI Nodes
 
 ### Structured Output
 
-**Always enable "Require Specific Output Format"** for reliable JSON:
+Always set for predictable JSON:
 
-```javascript
-{
-  "promptType": "define",
-  "hasOutputParser": true,
-  "schemaType": "manual"  // Required for nullable fields
-}
-```
+| Setting | Value |
+|---------|-------|
+| `promptType` | `"define"` |
+| `hasOutputParser` | `true` |
+| `schemaType` | `"manual"` (for nullable fields) |
 
-Without these, AI outputs are unpredictable.
-
-### Memory Storage
-
-**Never use in-memory storage in production:**
+### Memory
 
 | Don't Use | Use Instead |
 |-----------|-------------|
 | Windowed Buffer Memory | Postgres Chat Memory |
 | In-Memory Vector Store | Postgres pgvector |
 
-In-memory dies with restart and doesn't scale.
+In-memory dies on restart, doesn't scale.
 
----
+## Code Nodes: Last Resort
 
-## Architecture Patterns
+| Need | Use Instead |
+|------|-------------|
+| Transform fields | Set node with expressions |
+| Filter items | Filter node or Switch |
+| Merge data | Merge node |
+| Loop | n8n processes arrays natively |
+| Date formatting | `{{ $now.format('yyyy-MM-dd') }}` |
 
-### Single Responsibility
+When code IS necessary:
+- Re-establishing `pairedItem` after chain breaks
+- Complex conditional logic
+- API parsing expressions can't handle
 
-Don't build monolith workflows:
+## Pre-Edit Checklist
 
-```
-Bad: One workflow doing signup → email → CRM → calendar → reports
+| Step | Why |
+|------|-----|
+| 1. Get explicit user approval | Don't surprise |
+| 2. List versions | Know rollback point |
+| 3. Read full workflow | Understand current state |
+| 4. Make targeted change | Minimal surface area |
+| 5. Validate after | Catch issues immediately |
 
-Good: Five focused workflows that communicate via webhooks
-```
+## Node-Specific Settings
 
-### Switch > If Node
-
-Always use Switch instead of If:
-- Named outputs (not just true/false)
-- Unlimited conditional branches
-- Send to all matching option
-
----
-
-## Validation Rules Enforced
-
-| Rule | Severity | Description |
-|------|----------|-------------|
-| `snake_case` | warning | Names should be snake_case |
-| `explicit_reference` | warning | Use `$('node')` not `$json` |
-| `no_hardcoded_ids` | info | Avoid hardcoded IDs |
-| `no_hardcoded_secrets` | error | Never hardcode secrets |
-| `orphan_node` | warning | Node has no connections |
-| `parameter_preservation` | error | Update would remove parameters |
-| `code_node_usage` | info | Code node detected |
-| `ai_structured_output` | warning | AI node missing structured output |
-| `in_memory_storage` | warning | Using non-persistent storage |
-
----
-
-## Quick Reference
-
-```javascript
-// Explicit reference
-{{ $('node_name').item.json.field }}
-
-// Environment variable
-{{ $env.VAR_NAME }}
-
-// Config node reference
-{{ $('config').item.json.setting }}
-
-// Parallel branch query
-{{ $('lookup').all().some(i => i.json.id === $json.id) }}
-
-// Date formatting
-{{ $now.format('yyyy-MM-dd') }}
-
-// Fallback
-{{ $json.text || $json.description || 'default' }}
-```
+See [Node Config](node-config.md) for:
+- Resource locator (`__rl`) format with `cachedResultName`
+- Google Sheets, Gmail, Discord required fields
+- Set node JSON mode vs manual mapping
+- Error handling options

@@ -1,9 +1,20 @@
 # n8n MCP Server
 
-> Version control, validation, and patch-based updates for n8n workflows.
+Workflow validation, version control, and patch-based updates for n8n.
 
-[![npm version](https://img.shields.io/npm/v/@pagelines/n8n-mcp.svg)](https://www.npmjs.com/package/@pagelines/n8n-mcp)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+## The Problem
+
+Other n8n MCPs replace entire nodes on update—losing parameters you didn't touch. No rollback. 70MB of SQLite for node docs you can Google.
+
+## This MCP
+
+| Feature | This | Others |
+|---------|------|--------|
+| Update approach | Patch (preserves params) | Replace (loses params) |
+| Version control | Auto-snapshot before mutations | Manual/none |
+| Validation | Expression syntax, circular refs, secrets | Basic |
+| Auto-fix | snake_case, $json→$('node'), AI settings | None |
+| Size | ~1,200 LOC, zero deps | 10k+ LOC, 70MB SQLite |
 
 ## Install
 
@@ -11,7 +22,7 @@
 npx @pagelines/n8n-mcp
 ```
 
-Add to MCP config (`~/.claude/mcp.json`):
+Add to `~/.claude/mcp.json`:
 
 ```json
 {
@@ -28,70 +39,41 @@ Add to MCP config (`~/.claude/mcp.json`):
 }
 ```
 
-## Why This MCP
-
-**Patch-based updates.** Modify workflows without losing existing parameters. Other tools replace entire nodes—this one merges changes safely.
-
-**Built-in version control.** Every edit auto-saves a snapshot. Roll back any workflow to any previous state. Diff changes before deploying.
-
-**Validation that matters.** Catches real production issues: implicit `$json` refs that break on node rename, orphan nodes, hardcoded secrets, malformed expressions.
-
-**Auto-fix.** Convert names to `snake_case`, replace `$json` with explicit `$('node')` references, add missing AI output settings—automatically.
-
-**Minimal footprint.** ~1,200 lines of code. No database. No bloat.
-
 ## Tools
 
-### Workflow Operations
+| Category | Tools |
+|----------|-------|
+| Workflow | `list` `get` `create` `update` `delete` `activate` `deactivate` `execute` |
+| Execution | `list` `get` |
+| Validation | `validate` `autofix` `format` |
+| Versions | `list` `get` `save` `rollback` `diff` `stats` |
 
-| Tool | Description |
-|------|-------------|
-| `workflow_list` | List all workflows |
-| `workflow_get` | Get workflow by ID |
-| `workflow_create` | Create new workflow |
-| `workflow_update` | Patch-based updates (preserves parameters) |
-| `workflow_delete` | Delete workflow |
-| `workflow_activate` | Enable triggers |
-| `workflow_deactivate` | Disable triggers |
-| `workflow_execute` | Execute via webhook |
+## Validation
 
-### Quality & Validation
+| Rule | Severity | Auto-fix |
+|------|----------|----------|
+| snake_case naming | warning | Yes |
+| Explicit refs (`$('node')` not `$json`) | warning | Yes |
+| AI structured output | warning | Yes |
+| Hardcoded secrets | error | No |
+| Orphan nodes | warning | No |
+| Expression syntax | error | No |
+| Circular references | error | No |
 
-| Tool | Description |
-|------|-------------|
-| `workflow_validate` | Check best practices, expressions, circular refs |
-| `workflow_autofix` | Auto-fix snake_case, explicit refs, AI settings |
-| `workflow_format` | Sort nodes, clean nulls |
+## Config
 
-### Version Control
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `N8N_API_URL` | required | n8n instance URL |
+| `N8N_API_KEY` | required | API key |
+| `N8N_MCP_VERSIONS` | `true` | Enable version control |
+| `N8N_MCP_MAX_VERSIONS` | `20` | Max snapshots per workflow |
 
-| Tool | Description |
-|------|-------------|
-| `version_list` | List saved versions |
-| `version_get` | Get specific version |
-| `version_save` | Manual snapshot |
-| `version_rollback` | Restore previous version |
-| `version_diff` | Compare versions |
+## Docs
 
-## Validation Rules
-
-| Rule | Severity |
-|------|----------|
-| `snake_case` naming | warning |
-| Explicit refs (`$('node')` not `$json`) | warning |
-| No hardcoded secrets | error |
-| No orphan nodes | warning |
-| AI structured output | warning |
-| Expression syntax | error |
-
-## Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `N8N_API_URL` | Your n8n instance URL |
-| `N8N_API_KEY` | API key from n8n settings |
-| `N8N_MCP_VERSIONS` | Enable version control (default: true) |
-| `N8N_MCP_MAX_VERSIONS` | Max versions per workflow (default: 20) |
+- [Best Practices](docs/best-practices.md) - Expression patterns, config nodes, AI settings
+- [Node Config](docs/node-config.md) - Human-editable node settings (`__rl`, Set node, etc.)
+- [Architecture](plans/architecture.md) - Technical reference
 
 ## License
 

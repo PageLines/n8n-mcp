@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2025-01-13
+
+### Added
+- [Node Config Guide](docs/node-config.md) - Human-editable node settings (`__rl` resource locator, Set node JSON mode, AI structured output)
+
+### Changed
+- Sharpened documentation (31% line reduction, higher data-ink ratio)
+- README: Lead with differentiation, compact tool/validation tables
+- Best Practices: Quick reference at top, focused on MCP-validated patterns
+- Architecture: Technical reference, removed redundant philosophy sections
+
 ## [0.2.0] - 2025-01-12
 
 ### Added
