@@ -115,6 +115,103 @@ describe('validateWorkflow', () => {
       })
     );
   });
+
+  it('info on code node usage', () => {
+    const workflow = createWorkflow({
+      nodes: [
+        {
+          id: '1',
+          name: 'my_code',
+          type: 'n8n-nodes-base.code',
+          typeVersion: 1,
+          position: [0, 0],
+          parameters: { jsCode: 'return items;' },
+        },
+      ],
+    });
+
+    const result = validateWorkflow(workflow);
+    expect(result.warnings).toContainEqual(
+      expect.objectContaining({
+        rule: 'code_node_usage',
+        severity: 'info',
+      })
+    );
+  });
+
+  it('warns on AI node without structured output settings', () => {
+    const workflow = createWorkflow({
+      nodes: [
+        {
+          id: '1',
+          name: 'ai_agent',
+          type: '@n8n/n8n-nodes-langchain.agent',
+          typeVersion: 1,
+          position: [0, 0],
+          parameters: {
+            outputParser: true,
+            schemaType: 'manual',
+            // Missing promptType: 'define' and hasOutputParser: true
+          },
+        },
+      ],
+    });
+
+    const result = validateWorkflow(workflow);
+    expect(result.warnings).toContainEqual(
+      expect.objectContaining({
+        rule: 'ai_structured_output',
+        severity: 'warning',
+      })
+    );
+  });
+
+  it('passes AI node with correct structured output settings', () => {
+    const workflow = createWorkflow({
+      nodes: [
+        {
+          id: '1',
+          name: 'ai_agent',
+          type: '@n8n/n8n-nodes-langchain.agent',
+          typeVersion: 1,
+          position: [0, 0],
+          parameters: {
+            outputParser: true,
+            schemaType: 'manual',
+            promptType: 'define',
+            hasOutputParser: true,
+          },
+        },
+      ],
+    });
+
+    const result = validateWorkflow(workflow);
+    const aiWarnings = result.warnings.filter((w) => w.rule === 'ai_structured_output');
+    expect(aiWarnings).toHaveLength(0);
+  });
+
+  it('warns on in-memory storage nodes', () => {
+    const workflow = createWorkflow({
+      nodes: [
+        {
+          id: '1',
+          name: 'memory_buffer',
+          type: '@n8n/n8n-nodes-langchain.memoryBufferWindow',
+          typeVersion: 1,
+          position: [0, 0],
+          parameters: {},
+        },
+      ],
+    });
+
+    const result = validateWorkflow(workflow);
+    expect(result.warnings).toContainEqual(
+      expect.objectContaining({
+        rule: 'in_memory_storage',
+        severity: 'warning',
+      })
+    );
+  });
 });
 
 describe('validatePartialUpdate', () => {

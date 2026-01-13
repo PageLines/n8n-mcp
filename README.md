@@ -116,6 +116,11 @@ The `workflow_update` tool uses patch operations to safely modify workflows:
 | `no_hardcoded_secrets` | error | Never hardcode secrets |
 | `orphan_node` | warning | Node has no connections |
 | `parameter_preservation` | error | Update would remove parameters |
+| `code_node_usage` | info | Code node detected - ensure built-in nodes can't achieve this |
+| `ai_structured_output` | warning | AI node missing structured output settings |
+| `in_memory_storage` | warning | Using non-persistent storage (use Postgres instead) |
+
+See [docs/best-practices.md](docs/best-practices.md) for full best practices documentation.
 
 ## Development
 

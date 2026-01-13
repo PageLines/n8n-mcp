@@ -37,6 +37,15 @@ function validateNode(node: N8nNode, warnings: ValidationWarning[]): void {
 
   // Check for hardcoded secrets
   checkForHardcodedSecrets(node, warnings);
+
+  // Check for code node usage (should be last resort)
+  checkForCodeNodeUsage(node, warnings);
+
+  // Check for AI node structured output settings
+  checkForAIStructuredOutput(node, warnings);
+
+  // Check for in-memory storage (non-persistent)
+  checkForInMemoryStorage(node, warnings);
 }
 
 function validateSnakeCase(name: string, context: string, warnings: ValidationWarning[]): void {
@@ -129,6 +138,74 @@ function checkForHardcodedSecrets(node: N8nNode, warnings: ValidationWarning[]):
       });
       break;
     }
+  }
+}
+
+function checkForCodeNodeUsage(node: N8nNode, warnings: ValidationWarning[]): void {
+  // Detect code nodes - they should be last resort
+  const codeNodeTypes = [
+    'n8n-nodes-base.code',
+    'n8n-nodes-base.function',
+    'n8n-nodes-base.functionItem',
+  ];
+
+  if (codeNodeTypes.some((t) => node.type.includes(t))) {
+    warnings.push({
+      node: node.name,
+      rule: 'code_node_usage',
+      message: `Node "${node.name}" is a code node - ensure built-in nodes can't achieve this`,
+      severity: 'info',
+    });
+  }
+}
+
+function checkForAIStructuredOutput(node: N8nNode, warnings: ValidationWarning[]): void {
+  // Check AI/LLM nodes for structured output settings
+  const aiNodeTypes = [
+    'langchain.agent',
+    'langchain.chainLlm',
+    'langchain.lmChatOpenAi',
+    'langchain.lmChatAnthropic',
+    'langchain.lmChatGoogleGemini',
+  ];
+
+  const isAINode = aiNodeTypes.some((t) => node.type.toLowerCase().includes(t.toLowerCase()));
+  if (!isAINode) return;
+
+  // Check for structured output settings
+  const params = node.parameters as Record<string, unknown>;
+  const hasPromptType = params.promptType === 'define';
+  const hasOutputParser = params.hasOutputParser === true;
+
+  // Only warn if it looks like they want structured output but missed settings
+  if (params.outputParser || params.schemaType) {
+    if (!hasPromptType || !hasOutputParser) {
+      warnings.push({
+        node: node.name,
+        rule: 'ai_structured_output',
+        message: `Node "${node.name}" may need promptType: "define" and hasOutputParser: true for reliable structured output`,
+        severity: 'warning',
+      });
+    }
+  }
+}
+
+function checkForInMemoryStorage(node: N8nNode, warnings: ValidationWarning[]): void {
+  // Detect in-memory storage nodes that don't persist across restarts
+  const inMemoryTypes = [
+    'memoryBufferWindow',
+    'memoryVectorStore',
+    'vectorStoreInMemory',
+  ];
+
+  const isInMemory = inMemoryTypes.some((t) => node.type.toLowerCase().includes(t.toLowerCase()));
+  if (isInMemory) {
+    warnings.push({
+      node: node.name,
+      rule: 'in_memory_storage',
+      message: `Node "${node.name}" uses in-memory storage - consider Postgres for production persistence`,
+      severity: 'warning',
+    });
   }
 }
 
