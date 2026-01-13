@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { N8nClient } from './n8n-client.js';
+import { N8N_WORKFLOW_WRITABLE_FIELDS, pickFields } from './types.js';
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -349,14 +350,118 @@ describe('N8nClient', () => {
       const putCall = mockFetch.mock.calls[0];
       const putBody = JSON.parse(putCall[1].body);
 
-      // Critical: these must NOT be in the request body
+      // Only writable fields should be sent (schema-driven from N8N_WORKFLOW_WRITABLE_FIELDS)
+      const sentKeys = Object.keys(putBody).sort();
+      const expectedKeys = ['connections', 'name', 'nodes']; // Only non-undefined writable fields
+      expect(sentKeys).toEqual(expectedKeys);
+
+      // Read-only fields must NOT be in request
       expect(putBody.id).toBeUndefined();
       expect(putBody.createdAt).toBeUndefined();
       expect(putBody.updatedAt).toBeUndefined();
       expect(putBody.active).toBeUndefined();
-
-      // Only allowed properties should be sent
-      expect(Object.keys(putBody).sort()).toEqual(['connections', 'name', 'nodes']);
     });
+
+    it('filters out any unknown properties using schema-driven approach', async () => {
+      // Real n8n API returns many properties not in our type definition
+      // Schema-driven filtering ensures only N8N_WORKFLOW_WRITABLE_FIELDS are sent
+      const realN8nWorkflow = {
+        id: '123',
+        name: 'test_workflow',
+        active: true,
+        nodes: [{ id: 'n1', name: 'node1', type: 'test', typeVersion: 1, position: [0, 0] as [number, number], parameters: {} }],
+        connections: {},
+        settings: { timezone: 'UTC' },
+        staticData: { lastId: 5 },
+        tags: [{ id: 't1', name: 'production' }],
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-02T00:00:00.000Z',
+        versionId: 'v1',
+        // Properties that real n8n returns but aren't in writable fields:
+        homeProject: { id: 'proj1', type: 'personal', name: 'My Project' },
+        sharedWithProjects: [],
+        usedCredentials: [{ id: 'cred1', name: 'My API Key', type: 'apiKey' }],
+        meta: { instanceId: 'abc123' },
+        pinData: {},
+        triggerCount: 5,
+        unknownFutureField: 'whatever',
+      };
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify(realN8nWorkflow),
+      });
+
+      await client.updateWorkflow('123', realN8nWorkflow as any);
+
+      const putCall = mockFetch.mock.calls[0];
+      const putBody = JSON.parse(putCall[1].body);
+
+      // Request should ONLY contain fields from N8N_WORKFLOW_WRITABLE_FIELDS
+      const sentKeys = Object.keys(putBody).sort();
+      const allowedKeys = [...N8N_WORKFLOW_WRITABLE_FIELDS].sort();
+
+      // Every sent key must be in the allowed list
+      for (const key of sentKeys) {
+        expect(allowedKeys).toContain(key);
+      }
+
+      // Verify exact expected keys (all writable fields that had values)
+      expect(sentKeys).toEqual(['connections', 'name', 'nodes', 'settings', 'staticData', 'tags']);
+    });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// Schema utilities (types.ts)
+// ─────────────────────────────────────────────────────────────
+
+describe('pickFields utility', () => {
+  it('picks only specified fields', () => {
+    const obj = { a: 1, b: 2, c: 3, d: 4 };
+    const result = pickFields(obj, ['a', 'c'] as const);
+
+    expect(result).toEqual({ a: 1, c: 3 });
+    expect(Object.keys(result)).toEqual(['a', 'c']);
+  });
+
+  it('ignores undefined values', () => {
+    const obj = { a: 1, b: undefined, c: 3 };
+    const result = pickFields(obj, ['a', 'b', 'c'] as const);
+
+    expect(result).toEqual({ a: 1, c: 3 });
+    expect('b' in result).toBe(false);
+  });
+
+  it('ignores fields not in object', () => {
+    const obj = { a: 1 };
+    const result = pickFields(obj as any, ['a', 'missing'] as const);
+
+    expect(result).toEqual({ a: 1 });
+  });
+
+  it('returns empty object for empty fields array', () => {
+    const obj = { a: 1, b: 2 };
+    const result = pickFields(obj, [] as const);
+
+    expect(result).toEqual({});
+  });
+});
+
+describe('N8N_WORKFLOW_WRITABLE_FIELDS schema', () => {
+  it('contains expected writable fields', () => {
+    expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('name');
+    expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('nodes');
+    expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('connections');
+    expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('settings');
+    expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('staticData');
+    expect(N8N_WORKFLOW_WRITABLE_FIELDS).toContain('tags');
+  });
+
+  it('does NOT contain read-only fields', () => {
+    const readOnlyFields = ['id', 'active', 'createdAt', 'updatedAt', 'versionId'];
+    for (const field of readOnlyFields) {
+      expect(N8N_WORKFLOW_WRITABLE_FIELDS).not.toContain(field);
+    }
   });
 });

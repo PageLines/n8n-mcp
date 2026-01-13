@@ -106,6 +106,49 @@ export interface N8nListResponse<T> {
   nextCursor?: string;
 }
 
+// ─────────────────────────────────────────────────────────────
+// Schema-driven field definitions
+// Source of truth: n8n OpenAPI spec at /api/v1/openapi.yml
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Fields that n8n API accepts on PUT /workflows/:id
+ * All other fields (id, createdAt, homeProject, etc.) are read-only
+ *
+ * Derived from: n8n OpenAPI spec (GET {n8n-url}/api/v1/openapi.yml)
+ * Path: /workflows/{id} → put → requestBody → content → application/json → schema
+ *
+ * If n8n adds new writable fields, check the OpenAPI spec and update this array.
+ */
+export const N8N_WORKFLOW_WRITABLE_FIELDS = [
+  'name',
+  'nodes',
+  'connections',
+  'settings',
+  'staticData',
+  'tags',
+] as const;
+
+export type N8nWorkflowWritableField = (typeof N8N_WORKFLOW_WRITABLE_FIELDS)[number];
+export type N8nWorkflowUpdate = Pick<N8nWorkflow, N8nWorkflowWritableField>;
+
+/**
+ * Pick only specified fields from an object (strips everything else)
+ * Generic utility for schema-driven field filtering
+ */
+export function pickFields<T, K extends keyof T>(
+  obj: T,
+  fields: readonly K[]
+): Pick<T, K> {
+  const result = {} as Pick<T, K>;
+  for (const field of fields) {
+    if (field in (obj as object) && obj[field] !== undefined) {
+      result[field] = obj[field];
+    }
+  }
+  return result;
+}
+
 // Node type information from n8n API (GET /api/v1/nodes)
 export interface N8nNodeType {
   name: string;           // e.g., "n8n-nodes-base.webhook"

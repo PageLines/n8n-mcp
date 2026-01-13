@@ -1,6 +1,6 @@
 {
   "name": "@pagelines/n8n-mcp",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Opinionated MCP server for n8n workflow automation",
   "type": "module",
   "main": "dist/index.js",

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2025-01-13
+
+### Fixed
+- **Critical bug**: `workflow_update`, `workflow_format`, and `workflow_autofix` failing with "request/body must NOT have additional properties" error
+- Root cause: n8n API returns additional read-only properties that were being sent back on PUT requests
+- Solution: Schema-driven field filtering using `N8N_WORKFLOW_WRITABLE_FIELDS` allowlist (source of truth: n8n OpenAPI spec at `/api/v1/openapi.yml`)
+
+### Changed
+- Refactored `updateWorkflow` to use schema-driven approach instead of property denylist
+- Added `pickFields` generic utility for type-safe field filtering
+- Added comprehensive tests for schema-driven filtering
+
 ## [0.3.0] - 2025-01-13
 
 ### Added

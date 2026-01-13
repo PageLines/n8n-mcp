@@ -3,15 +3,17 @@
  * Clean, minimal implementation with built-in safety checks
  */
 
-import type {
-  N8nWorkflow,
-  N8nWorkflowListItem,
-  N8nExecution,
-  N8nExecutionListItem,
-  N8nListResponse,
-  N8nNode,
-  N8nNodeType,
-  PatchOperation,
+import {
+  N8N_WORKFLOW_WRITABLE_FIELDS,
+  pickFields,
+  type N8nWorkflow,
+  type N8nWorkflowListItem,
+  type N8nExecution,
+  type N8nExecutionListItem,
+  type N8nListResponse,
+  type N8nNode,
+  type N8nNodeType,
+  type PatchOperation,
 } from './types.js';
 
 export interface N8nClientConfig {
@@ -98,8 +100,8 @@ export class N8nClient {
     id: string,
     workflow: Partial<N8nWorkflow>
   ): Promise<N8nWorkflow> {
-    // Strip properties that n8n API doesn't accept on PUT
-    const { id: _id, createdAt, updatedAt, active, versionId, ...allowed } = workflow as any;
+    // Schema-driven: only send fields n8n accepts (defined in types.ts)
+    const allowed = pickFields(workflow, N8N_WORKFLOW_WRITABLE_FIELDS);
     return this.request('PUT', `/api/v1/workflows/${id}`, allowed);
   }
 
