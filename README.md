@@ -28,6 +28,18 @@ Add to MCP config (`~/.claude/mcp.json`):
 }
 ```
 
+## Why This MCP
+
+**Patch-based updates.** Modify workflows without losing existing parameters. Other tools replace entire nodes—this one merges changes safely.
+
+**Built-in version control.** Every edit auto-saves a snapshot. Roll back any workflow to any previous state. Diff changes before deploying.
+
+**Validation that matters.** Catches real production issues: implicit `$json` refs that break on node rename, orphan nodes, hardcoded secrets, malformed expressions.
+
+**Auto-fix.** Convert names to `snake_case`, replace `$json` with explicit `$('node')` references, add missing AI output settings—automatically.
+
+**Minimal footprint.** ~1,200 lines of code. No database. No bloat.
+
 ## Tools
 
 ### Workflow Operations
