@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.6] - 2025-01-14
+
+### Fixed
+- Layout constants now match n8n's actual tidy up values (from `nodeViewUtils.ts` and `useCanvasLayout.ts`)
+  - `NODE_WIDTH/HEIGHT`: 200/80 → 96/96 (matches `DEFAULT_NODE_SIZE`)
+  - `HORIZONTAL_SPACING`: 300 → 128 (`GRID_SIZE * 8`)
+  - `VERTICAL_SPACING`: 120 → 96 (`GRID_SIZE * 6`)
+  - `START_X/Y`: 250/300 → 176/240 (matches `DEFAULT_START_POSITION`)
+  - Added `edgesep` to dagre config for proper edge separation
+- Nodes no longer appear "small" relative to gaps after formatting
+
 ## [0.3.5] - 2025-01-13
 
 ### Changed

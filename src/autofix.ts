@@ -258,13 +258,15 @@ export function formatWorkflow(workflow: N8nWorkflow): N8nWorkflow {
   return formatted;
 }
 
-// Layout constants (similar to n8n's defaults)
-const NODE_WIDTH = 200;
-const NODE_HEIGHT = 80;
-const HORIZONTAL_SPACING = 300;
-const VERTICAL_SPACING = 120;
-const START_X = 250;
-const START_Y = 300;
+// Layout constants matching n8n's canvas (from nodeViewUtils.ts)
+// n8n uses GRID_SIZE = 16 as base unit
+const GRID_SIZE = 16;
+const NODE_WIDTH = GRID_SIZE * 6; // 96 - matches DEFAULT_NODE_SIZE
+const NODE_HEIGHT = GRID_SIZE * 6; // 96 - n8n uses square nodes
+const HORIZONTAL_SPACING = GRID_SIZE * 8; // 128 - NODE_X_SPACING (ranksep)
+const VERTICAL_SPACING = GRID_SIZE * 6; // 96 - NODE_Y_SPACING (nodesep)
+const START_X = GRID_SIZE * 11; // 176 - DEFAULT_START_POSITION_X
+const START_Y = GRID_SIZE * 15; // 240 - DEFAULT_START_POSITION_Y
 
 /**
  * Calculate node positions using dagre graph layout
@@ -276,9 +278,10 @@ function calculateNodePositions(workflow: N8nWorkflow): void {
   // Create a new directed graph
   const g = new dagre.graphlib.Graph();
 
-  // Set graph options: left-to-right layout, spacing
+  // Set graph options: left-to-right layout, spacing (matches n8n's useCanvasLayout.ts)
   g.setGraph({
     rankdir: 'LR', // Left to right (triggers on left, outputs on right)
+    edgesep: VERTICAL_SPACING, // Edge separation (n8n uses NODE_Y_SPACING)
     nodesep: VERTICAL_SPACING, // Vertical spacing between nodes
     ranksep: HORIZONTAL_SPACING, // Horizontal spacing between ranks/layers
     marginx: START_X,
