@@ -65,7 +65,7 @@ initVersionControl({
 const server = new Server(
   {
     name: '@pagelines/n8n-mcp',
-    version: '0.3.4',
+    version: '0.3.5',
   },
   {
     capabilities: {
