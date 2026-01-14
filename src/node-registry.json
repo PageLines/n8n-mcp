@@ -1,0 +1,2162 @@
+[
+  {
+    "type": "n8n-nodes-base.actionNetwork",
+    "name": "ActionNetwork",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.activeCampaign",
+    "name": "ActiveCampaign",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.activeCampaignTrigger",
+    "name": "ActiveCampaignTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.acuitySchedulingTrigger",
+    "name": "AcuitySchedulingTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.adalo",
+    "name": "Adalo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.affinity",
+    "name": "Affinity",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.affinityTrigger",
+    "name": "AffinityTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.aggregate",
+    "name": "Aggregate",
+    "category": "Transform"
+  },
+  {
+    "type": "n8n-nodes-base.agileCrm",
+    "name": "AgileCrm",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.airtable",
+    "name": "Airtable",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.airtableTrigger",
+    "name": "AirtableTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.airtop",
+    "name": "Airtop",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.aiTransform",
+    "name": "AiTransform",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.amqp",
+    "name": "Amqp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.amqpTrigger",
+    "name": "AmqpTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.apiTemplateIo",
+    "name": "ApiTemplateIo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.asana",
+    "name": "Asana",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.asanaTrigger",
+    "name": "AsanaTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.autopilot",
+    "name": "Autopilot",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.autopilotTrigger",
+    "name": "AutopilotTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.awsCertificateManager",
+    "name": "AwsCertificateManager",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsCognito",
+    "name": "AwsCognito",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsComprehend",
+    "name": "AwsComprehend",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsDynamoDB",
+    "name": "AwsDynamoDB",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsElb",
+    "name": "AwsElb",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsIam",
+    "name": "AwsIam",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsLambda",
+    "name": "AwsLambda",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.awsRekognition",
+    "name": "AwsRekognition",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsS3",
+    "name": "AwsS3",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsSes",
+    "name": "AwsSes",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsSns",
+    "name": "AwsSns",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.awsSnsTrigger",
+    "name": "AwsSnsTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.awsSqs",
+    "name": "AwsSqs",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsTextract",
+    "name": "AwsTextract",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.awsTranscribe",
+    "name": "AwsTranscribe",
+    "category": "Aws"
+  },
+  {
+    "type": "n8n-nodes-base.azureCosmosDb",
+    "name": "AzureCosmosDb",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.azureStorage",
+    "name": "AzureStorage",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.bambooHr",
+    "name": "BambooHr",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.bannerbear",
+    "name": "Bannerbear",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.baserow",
+    "name": "Baserow",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.beeminder",
+    "name": "Beeminder",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.bitbucketTrigger",
+    "name": "BitbucketTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.bitly",
+    "name": "Bitly",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.bitwarden",
+    "name": "Bitwarden",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.box",
+    "name": "Box",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.boxTrigger",
+    "name": "BoxTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.brandfetch",
+    "name": "Brandfetch",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.brevo",
+    "name": "Brevo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.brevoTrigger",
+    "name": "BrevoTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.bubble",
+    "name": "Bubble",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.calendlyTrigger",
+    "name": "CalendlyTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.calTrigger",
+    "name": "CalTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.chargebee",
+    "name": "Chargebee",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.chargebeeTrigger",
+    "name": "ChargebeeTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.circleCi",
+    "name": "CircleCi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.ciscoWebex",
+    "name": "CiscoWebex",
+    "category": "Cisco"
+  },
+  {
+    "type": "n8n-nodes-base.ciscoWebexTrigger",
+    "name": "CiscoWebexTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.clearbit",
+    "name": "Clearbit",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.clickUp",
+    "name": "ClickUp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.clickUpTrigger",
+    "name": "ClickUpTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.clockify",
+    "name": "Clockify",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.clockifyTrigger",
+    "name": "ClockifyTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.cloudflare",
+    "name": "Cloudflare",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.cockpit",
+    "name": "Cockpit",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.coda",
+    "name": "Coda",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.code",
+    "name": "Code",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.coinGecko",
+    "name": "CoinGecko",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.compareDatasets",
+    "name": "CompareDatasets",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.compression",
+    "name": "Compression",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.contentful",
+    "name": "Contentful",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.convertKit",
+    "name": "ConvertKit",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.convertKitTrigger",
+    "name": "ConvertKitTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.convertToFile",
+    "name": "ConvertToFile",
+    "category": "Files"
+  },
+  {
+    "type": "n8n-nodes-base.copper",
+    "name": "Copper",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.copperTrigger",
+    "name": "CopperTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.cortex",
+    "name": "Cortex",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.crateDb",
+    "name": "CrateDb",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.cron",
+    "name": "Cron",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.crypto",
+    "name": "Crypto",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.customerIo",
+    "name": "CustomerIo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.customerIoTrigger",
+    "name": "CustomerIoTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.dataTable",
+    "name": "DataTable",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.dateTime",
+    "name": "DateTime",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.debugHelper",
+    "name": "DebugHelper",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.deepL",
+    "name": "DeepL",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.demio",
+    "name": "Demio",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.dhl",
+    "name": "Dhl",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.discord",
+    "name": "Discord",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.discourse",
+    "name": "Discourse",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.disqus",
+    "name": "Disqus",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.drift",
+    "name": "Drift",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.dropbox",
+    "name": "Dropbox",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.dropcontact",
+    "name": "Dropcontact",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.e2eTest",
+    "name": "E2eTest",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.editImage",
+    "name": "EditImage",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.egoi",
+    "name": "Egoi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.elasticsearch",
+    "name": "Elasticsearch",
+    "category": "Elastic"
+  },
+  {
+    "type": "n8n-nodes-base.elasticSecurity",
+    "name": "ElasticSecurity",
+    "category": "Elastic"
+  },
+  {
+    "type": "n8n-nodes-base.emailReadImap",
+    "name": "EmailReadImap",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.emailSend",
+    "name": "EmailSend",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.emelia",
+    "name": "Emelia",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.emeliaTrigger",
+    "name": "EmeliaTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.eRPNext",
+    "name": "ERPNext",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.errorTrigger",
+    "name": "ErrorTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.eventbriteTrigger",
+    "name": "EventbriteTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.executeCommand",
+    "name": "ExecuteCommand",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.executeWorkflow",
+    "name": "ExecuteWorkflow",
+    "category": "Flow"
+  },
+  {
+    "type": "n8n-nodes-base.executeWorkflowTrigger",
+    "name": "ExecuteWorkflowTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.executionData",
+    "name": "ExecutionData",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.extractFromFile",
+    "name": "ExtractFromFile",
+    "category": "Files"
+  },
+  {
+    "type": "n8n-nodes-base.facebookGraphApi",
+    "name": "FacebookGraphApi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.facebookLeadAdsTrigger",
+    "name": "FacebookLeadAdsTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.facebookTrigger",
+    "name": "FacebookTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.figmaTrigger",
+    "name": "FigmaTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.fileMaker",
+    "name": "FileMaker",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.filter",
+    "name": "Filter",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.flow",
+    "name": "Flow",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.flowTrigger",
+    "name": "FlowTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.form",
+    "name": "Form",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.formIoTrigger",
+    "name": "FormIoTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.formstackTrigger",
+    "name": "FormstackTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.formTrigger",
+    "name": "FormTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.freshdesk",
+    "name": "Freshdesk",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.freshservice",
+    "name": "Freshservice",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.freshworksCrm",
+    "name": "FreshworksCrm",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.ftp",
+    "name": "Ftp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.function",
+    "name": "Function",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.functionItem",
+    "name": "FunctionItem",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.getResponse",
+    "name": "GetResponse",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.getResponseTrigger",
+    "name": "GetResponseTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.ghost",
+    "name": "Ghost",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.git",
+    "name": "Git",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.github",
+    "name": "Github",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.githubTrigger",
+    "name": "GithubTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.gitlab",
+    "name": "Gitlab",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.gitlabTrigger",
+    "name": "GitlabTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.gmail",
+    "name": "Gmail",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.gmailTrigger",
+    "name": "GmailTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.gong",
+    "name": "Gong",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.googleAds",
+    "name": "GoogleAds",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleAnalytics",
+    "name": "GoogleAnalytics",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleBigQuery",
+    "name": "GoogleBigQuery",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleBooks",
+    "name": "GoogleBooks",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleBusinessProfile",
+    "name": "GoogleBusinessProfile",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleBusinessProfileTrigger",
+    "name": "GoogleBusinessProfileTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.googleCalendar",
+    "name": "GoogleCalendar",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleCalendarTrigger",
+    "name": "GoogleCalendarTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.googleChat",
+    "name": "GoogleChat",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleCloudNaturalLanguage",
+    "name": "GoogleCloudNaturalLanguage",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleCloudStorage",
+    "name": "GoogleCloudStorage",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleContacts",
+    "name": "GoogleContacts",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleDocs",
+    "name": "GoogleDocs",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleDrive",
+    "name": "GoogleDrive",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleDriveTrigger",
+    "name": "GoogleDriveTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.googleFirebaseCloudFirestore",
+    "name": "GoogleFirebaseCloudFirestore",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleFirebaseRealtimeDatabase",
+    "name": "GoogleFirebaseRealtimeDatabase",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googlePerspective",
+    "name": "GooglePerspective",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleSheets",
+    "name": "GoogleSheets",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleSheetsTrigger",
+    "name": "GoogleSheetsTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.googleSlides",
+    "name": "GoogleSlides",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleTasks",
+    "name": "GoogleTasks",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.googleTranslate",
+    "name": "GoogleTranslate",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.gotify",
+    "name": "Gotify",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.goToWebinar",
+    "name": "GoToWebinar",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.grafana",
+    "name": "Grafana",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.graphQL",
+    "name": "GraphQL",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.grist",
+    "name": "Grist",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.gSuiteAdmin",
+    "name": "GSuiteAdmin",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.gumroadTrigger",
+    "name": "GumroadTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.hackerNews",
+    "name": "HackerNews",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.haloPSA",
+    "name": "HaloPSA",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.harvest",
+    "name": "Harvest",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.helpScout",
+    "name": "HelpScout",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.helpScoutTrigger",
+    "name": "HelpScoutTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.highLevel",
+    "name": "HighLevel",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.homeAssistant",
+    "name": "HomeAssistant",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.html",
+    "name": "Html",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.htmlExtract",
+    "name": "HtmlExtract",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.httpRequest",
+    "name": "HttpRequest",
+    "category": "HTTP"
+  },
+  {
+    "type": "n8n-nodes-base.hubspot",
+    "name": "Hubspot",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.hubspotTrigger",
+    "name": "HubspotTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.humanticAi",
+    "name": "HumanticAi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.hunter",
+    "name": "Hunter",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.iCalendar",
+    "name": "ICalendar",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.if",
+    "name": "If",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.intercom",
+    "name": "Intercom",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.interval",
+    "name": "Interval",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.invoiceNinja",
+    "name": "InvoiceNinja",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.invoiceNinjaTrigger",
+    "name": "InvoiceNinjaTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.itemLists",
+    "name": "ItemLists",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.iterable",
+    "name": "Iterable",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.jenkins",
+    "name": "Jenkins",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.jinaAi",
+    "name": "JinaAi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.jira",
+    "name": "Jira",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.jiraTrigger",
+    "name": "JiraTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.jotFormTrigger",
+    "name": "JotFormTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.jwt",
+    "name": "Jwt",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.kafka",
+    "name": "Kafka",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.kafkaTrigger",
+    "name": "KafkaTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.keap",
+    "name": "Keap",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.keapTrigger",
+    "name": "KeapTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.koBoToolbox",
+    "name": "KoBoToolbox",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.koBoToolboxTrigger",
+    "name": "KoBoToolboxTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.ldap",
+    "name": "Ldap",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.lemlist",
+    "name": "Lemlist",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.lemlistTrigger",
+    "name": "LemlistTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.limit",
+    "name": "Limit",
+    "category": "Transform"
+  },
+  {
+    "type": "n8n-nodes-base.line",
+    "name": "Line",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.linear",
+    "name": "Linear",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.linearTrigger",
+    "name": "LinearTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.lingvaNex",
+    "name": "LingvaNex",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.linkedIn",
+    "name": "LinkedIn",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.localFileTrigger",
+    "name": "LocalFileTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.loneScale",
+    "name": "LoneScale",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.loneScaleTrigger",
+    "name": "LoneScaleTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.magento2",
+    "name": "Magento2",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mailcheck",
+    "name": "Mailcheck",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mailchimp",
+    "name": "Mailchimp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mailchimpTrigger",
+    "name": "MailchimpTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.mailerLite",
+    "name": "MailerLite",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mailerLiteTrigger",
+    "name": "MailerLiteTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.mailgun",
+    "name": "Mailgun",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mailjet",
+    "name": "Mailjet",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mailjetTrigger",
+    "name": "MailjetTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.mandrill",
+    "name": "Mandrill",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.manualTrigger",
+    "name": "ManualTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.markdown",
+    "name": "Markdown",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.marketstack",
+    "name": "Marketstack",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.matrix",
+    "name": "Matrix",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mattermost",
+    "name": "Mattermost",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mautic",
+    "name": "Mautic",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mauticTrigger",
+    "name": "MauticTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.medium",
+    "name": "Medium",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.merge",
+    "name": "Merge",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.messageBird",
+    "name": "MessageBird",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.metabase",
+    "name": "Metabase",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftDynamicsCrm",
+    "name": "MicrosoftDynamicsCrm",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftEntra",
+    "name": "MicrosoftEntra",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftExcel",
+    "name": "MicrosoftExcel",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftGraphSecurity",
+    "name": "MicrosoftGraphSecurity",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftOneDrive",
+    "name": "MicrosoftOneDrive",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftOneDriveTrigger",
+    "name": "MicrosoftOneDriveTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftOutlook",
+    "name": "MicrosoftOutlook",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftOutlookTrigger",
+    "name": "MicrosoftOutlookTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftSharePoint",
+    "name": "MicrosoftSharePoint",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftSql",
+    "name": "MicrosoftSql",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftTeams",
+    "name": "MicrosoftTeams",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftTeamsTrigger",
+    "name": "MicrosoftTeamsTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.microsoftToDo",
+    "name": "MicrosoftToDo",
+    "category": "Microsoft"
+  },
+  {
+    "type": "n8n-nodes-base.mindee",
+    "name": "Mindee",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.misp",
+    "name": "Misp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mistralAi",
+    "name": "MistralAi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mocean",
+    "name": "Mocean",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mondayCom",
+    "name": "MondayCom",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mongoDb",
+    "name": "MongoDb",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.monicaCrm",
+    "name": "MonicaCrm",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.moveBinaryData",
+    "name": "MoveBinaryData",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mqtt",
+    "name": "Mqtt",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mqttTrigger",
+    "name": "MqttTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.msg91",
+    "name": "Msg91",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.mySql",
+    "name": "MySql",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.n8n",
+    "name": "N8n",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.n8nTrainingCustomerDatastore",
+    "name": "N8nTrainingCustomerDatastore",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.n8nTrainingCustomerMessenger",
+    "name": "N8nTrainingCustomerMessenger",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.n8nTrigger",
+    "name": "N8nTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.nasa",
+    "name": "Nasa",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.netlify",
+    "name": "Netlify",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.netlifyTrigger",
+    "name": "NetlifyTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.netscalerAdc",
+    "name": "NetscalerAdc",
+    "category": "Netscaler"
+  },
+  {
+    "type": "n8n-nodes-base.nextCloud",
+    "name": "NextCloud",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.nocoDB",
+    "name": "NocoDB",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.noOp",
+    "name": "NoOp",
+    "category": "Flow"
+  },
+  {
+    "type": "n8n-nodes-base.notion",
+    "name": "Notion",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.notionTrigger",
+    "name": "NotionTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.npm",
+    "name": "Npm",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.odoo",
+    "name": "Odoo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.okta",
+    "name": "Okta",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.oneSimpleApi",
+    "name": "OneSimpleApi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.onfleet",
+    "name": "Onfleet",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.onfleetTrigger",
+    "name": "OnfleetTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.openAi",
+    "name": "OpenAi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.openThesaurus",
+    "name": "OpenThesaurus",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.openWeatherMap",
+    "name": "OpenWeatherMap",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.oracleSql",
+    "name": "OracleSql",
+    "category": "Oracle"
+  },
+  {
+    "type": "n8n-nodes-base.orbit",
+    "name": "Orbit",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.oura",
+    "name": "Oura",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.paddle",
+    "name": "Paddle",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.pagerDuty",
+    "name": "PagerDuty",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.payPal",
+    "name": "PayPal",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.payPalTrigger",
+    "name": "PayPalTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.peekalink",
+    "name": "Peekalink",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.perplexity",
+    "name": "Perplexity",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.phantombuster",
+    "name": "Phantombuster",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.philipsHue",
+    "name": "PhilipsHue",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.pipedrive",
+    "name": "Pipedrive",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.pipedriveTrigger",
+    "name": "PipedriveTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.plivo",
+    "name": "Plivo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.postBin",
+    "name": "PostBin",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.postgres",
+    "name": "Postgres",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.postgresTrigger",
+    "name": "PostgresTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.postHog",
+    "name": "PostHog",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.postmarkTrigger",
+    "name": "PostmarkTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.profitWell",
+    "name": "ProfitWell",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.pushbullet",
+    "name": "Pushbullet",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.pushcut",
+    "name": "Pushcut",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.pushcutTrigger",
+    "name": "PushcutTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.pushover",
+    "name": "Pushover",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.questDb",
+    "name": "QuestDb",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.quickBase",
+    "name": "QuickBase",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.quickBooks",
+    "name": "QuickBooks",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.quickChart",
+    "name": "QuickChart",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.rabbitMQ",
+    "name": "RabbitMQ",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.rabbitMQTrigger",
+    "name": "RabbitMQTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.raindrop",
+    "name": "Raindrop",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.readBinaryFile",
+    "name": "ReadBinaryFile",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.readBinaryFiles",
+    "name": "ReadBinaryFiles",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.readPDF",
+    "name": "ReadPDF",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.readWriteFile",
+    "name": "ReadWriteFile",
+    "category": "Files"
+  },
+  {
+    "type": "n8n-nodes-base.reddit",
+    "name": "Reddit",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.redis",
+    "name": "Redis",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.redisTrigger",
+    "name": "RedisTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.removeDuplicates",
+    "name": "RemoveDuplicates",
+    "category": "Transform"
+  },
+  {
+    "type": "n8n-nodes-base.renameKeys",
+    "name": "RenameKeys",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.respondToWebhook",
+    "name": "RespondToWebhook",
+    "category": "HTTP"
+  },
+  {
+    "type": "n8n-nodes-base.rocketchat",
+    "name": "Rocketchat",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.rssFeedRead",
+    "name": "RssFeedRead",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.rssFeedReadTrigger",
+    "name": "RssFeedReadTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.rundeck",
+    "name": "Rundeck",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.s3",
+    "name": "S3",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.salesforce",
+    "name": "Salesforce",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.salesforceTrigger",
+    "name": "SalesforceTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.salesmate",
+    "name": "Salesmate",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.scheduleTrigger",
+    "name": "ScheduleTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.seaTable",
+    "name": "SeaTable",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.seaTableTrigger",
+    "name": "SeaTableTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.securityScorecard",
+    "name": "SecurityScorecard",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.segment",
+    "name": "Segment",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.sendGrid",
+    "name": "SendGrid",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.sendy",
+    "name": "Sendy",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.sentryIo",
+    "name": "SentryIo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.serviceNow",
+    "name": "ServiceNow",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.set",
+    "name": "Set",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.shopify",
+    "name": "Shopify",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.shopifyTrigger",
+    "name": "ShopifyTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.signl4",
+    "name": "Signl4",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.simulate",
+    "name": "Simulate",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.simulateTrigger",
+    "name": "SimulateTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.slack",
+    "name": "Slack",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.slackTrigger",
+    "name": "SlackTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.sms77",
+    "name": "Sms77",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.snowflake",
+    "name": "Snowflake",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.sort",
+    "name": "Sort",
+    "category": "Transform"
+  },
+  {
+    "type": "n8n-nodes-base.splitInBatches",
+    "name": "SplitInBatches",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.splitOut",
+    "name": "SplitOut",
+    "category": "Transform"
+  },
+  {
+    "type": "n8n-nodes-base.splunk",
+    "name": "Splunk",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.spotify",
+    "name": "Spotify",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.spreadsheetFile",
+    "name": "SpreadsheetFile",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.sseTrigger",
+    "name": "SseTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.ssh",
+    "name": "Ssh",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.stackby",
+    "name": "Stackby",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.stickyNote",
+    "name": "StickyNote",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.stopAndError",
+    "name": "StopAndError",
+    "category": "Flow"
+  },
+  {
+    "type": "n8n-nodes-base.storyblok",
+    "name": "Storyblok",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.strapi",
+    "name": "Strapi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.strava",
+    "name": "Strava",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.stravaTrigger",
+    "name": "StravaTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.stripe",
+    "name": "Stripe",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.stripeTrigger",
+    "name": "StripeTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.summarize",
+    "name": "Summarize",
+    "category": "Transform"
+  },
+  {
+    "type": "n8n-nodes-base.supabase",
+    "name": "Supabase",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.surveyMonkeyTrigger",
+    "name": "SurveyMonkeyTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.switch",
+    "name": "Switch",
+    "category": "Core"
+  },
+  {
+    "type": "n8n-nodes-base.syncroMsp",
+    "name": "SyncroMsp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.taiga",
+    "name": "Taiga",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.taigaTrigger",
+    "name": "TaigaTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.tapfiliate",
+    "name": "Tapfiliate",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.telegram",
+    "name": "Telegram",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.telegramTrigger",
+    "name": "TelegramTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.theHive",
+    "name": "TheHive",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.theHiveProject",
+    "name": "TheHiveProject",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.theHiveProjectTrigger",
+    "name": "TheHiveProjectTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.theHiveTrigger",
+    "name": "TheHiveTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.timeSaved",
+    "name": "TimeSaved",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.timescaleDb",
+    "name": "TimescaleDb",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.todoist",
+    "name": "Todoist",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.togglTrigger",
+    "name": "TogglTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.totp",
+    "name": "Totp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.travisCi",
+    "name": "TravisCi",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.trello",
+    "name": "Trello",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.trelloTrigger",
+    "name": "TrelloTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.twake",
+    "name": "Twake",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.twilio",
+    "name": "Twilio",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.twilioTrigger",
+    "name": "TwilioTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.twist",
+    "name": "Twist",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.twitter",
+    "name": "Twitter",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.typeformTrigger",
+    "name": "TypeformTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.unleashedSoftware",
+    "name": "UnleashedSoftware",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.uplead",
+    "name": "Uplead",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.uProc",
+    "name": "UProc",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.uptimeRobot",
+    "name": "UptimeRobot",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.urlScanIo",
+    "name": "UrlScanIo",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.venafiTlsProtectCloud",
+    "name": "VenafiTlsProtectCloud",
+    "category": "Venafi"
+  },
+  {
+    "type": "n8n-nodes-base.venafiTlsProtectCloudTrigger",
+    "name": "VenafiTlsProtectCloudTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.venafiTlsProtectDatacenter",
+    "name": "VenafiTlsProtectDatacenter",
+    "category": "Venafi"
+  },
+  {
+    "type": "n8n-nodes-base.vero",
+    "name": "Vero",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.vonage",
+    "name": "Vonage",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.wait",
+    "name": "Wait",
+    "category": "Flow"
+  },
+  {
+    "type": "n8n-nodes-base.webflow",
+    "name": "Webflow",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.webflowTrigger",
+    "name": "WebflowTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.webhook",
+    "name": "Webhook",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.wekan",
+    "name": "Wekan",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.whatsApp",
+    "name": "WhatsApp",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.whatsAppTrigger",
+    "name": "WhatsAppTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.wise",
+    "name": "Wise",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.wiseTrigger",
+    "name": "WiseTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.wooCommerce",
+    "name": "WooCommerce",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.wooCommerceTrigger",
+    "name": "WooCommerceTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.wordpress",
+    "name": "Wordpress",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.workableTrigger",
+    "name": "WorkableTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.workflowTrigger",
+    "name": "WorkflowTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.writeBinaryFile",
+    "name": "WriteBinaryFile",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.wufooTrigger",
+    "name": "WufooTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.xero",
+    "name": "Xero",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.xml",
+    "name": "Xml",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.yourls",
+    "name": "Yourls",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.youTube",
+    "name": "YouTube",
+    "category": "Google"
+  },
+  {
+    "type": "n8n-nodes-base.zammad",
+    "name": "Zammad",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.zendesk",
+    "name": "Zendesk",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.zendeskTrigger",
+    "name": "ZendeskTrigger",
+    "category": "Triggers"
+  },
+  {
+    "type": "n8n-nodes-base.zohoCrm",
+    "name": "ZohoCrm",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.zoom",
+    "name": "Zoom",
+    "category": "Integration"
+  },
+  {
+    "type": "n8n-nodes-base.zulip",
+    "name": "Zulip",
+    "category": "Integration"
+  }
+]

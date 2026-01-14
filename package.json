@@ -1,6 +1,6 @@
 {
   "name": "@pagelines/n8n-mcp",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "description": "Opinionated MCP server for n8n workflow automation",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,8 @@
     "dev": "tsc --watch",
     "start": "node dist/index.js",
     "test": "vitest",
-    "prepublishOnly": "npm run build"
+    "update-nodes": "npx tsx scripts/update-nodes.ts",
+    "prepublishOnly": "npm run update-nodes && npm run build"
   },
   "keywords": [
     "n8n",
@@ -32,9 +33,11 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dagre": "^0.8.5"
   },
   "devDependencies": {
+    "@types/dagre": "^0.7.53",
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"

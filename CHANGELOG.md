@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.4] - 2025-01-13
+
+### Added
+- `node_types_list` tool - Static registry of 430+ n8n node types for discovery
+- `scripts/update-nodes.ts` - Script to fetch node list from official n8n-nodes-base
+- Auto-update on publish: `npm run update-nodes` runs before package publish
+- Comprehensive unit tests for autofix module (37 tests)
+- Exported `toSnakeCase` utility for external use
+
+### Changed
+- `workflow_format` now uses [dagre](https://github.com/dagrejs/dagre) for graph layout (like "Tidy Up")
+  - Same algorithm n8n uses in the editor
+  - Proper edge crossing minimization
+  - Left-to-right layout (triggers on left, outputs on right)
+
 ## [0.3.2] - 2025-01-13
 
 ### Removed

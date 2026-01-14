@@ -32,6 +32,7 @@ import {
   type ResponseFormat,
 } from './response-format.js';
 import type { PatchOperation, N8nConnections } from './types.js';
+import { searchNodeTypes, getCategories, getNodeCount } from './node-registry.js';
 
 // ─────────────────────────────────────────────────────────────
 // Configuration
@@ -64,7 +65,7 @@ initVersionControl({
 const server = new Server(
   {
     name: '@pagelines/n8n-mcp',
-    version: '0.3.2',
+    version: '0.3.4',
   },
   {
     capabilities: {
@@ -435,6 +436,21 @@ async function handleTool(name: string, args: Record<string, unknown>): Promise<
     case 'version_stats': {
       const stats = await getVersionStats();
       return stats;
+    }
+
+    // Node Discovery
+    case 'node_types_list': {
+      const nodes = searchNodeTypes({
+        search: args.search as string | undefined,
+        category: args.category as string | undefined,
+        limit: (args.limit as number) || 100,
+      });
+      return {
+        nodes,
+        total: nodes.length,
+        totalAvailable: getNodeCount(),
+        categories: getCategories(),
+      };
     }
 
     default:

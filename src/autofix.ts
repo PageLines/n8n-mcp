@@ -1,8 +1,15 @@
 /**
- * Auto-fix common n8n workflow issues
- * Transforms workflows to follow best practices
+ * Auto-fix and Format n8n Workflows
+ *
+ * Pure functions for workflow transformation:
+ * - autofixWorkflow: Apply automatic fixes for validation warnings
+ * - formatWorkflow: Calculate node positions (dagre) and clean parameters
+ * - toSnakeCase: Convert strings to snake_case format
+ *
+ * All functions return new objects without mutating inputs.
  */
 
+import dagre from 'dagre';
 import type { N8nWorkflow, N8nNode, ValidationWarning } from './types.js';
 
 export interface AutofixResult {
@@ -129,9 +136,10 @@ function fixSnakeCase(workflow: N8nWorkflow, warning: ValidationWarning): Autofi
 }
 
 /**
- * Convert to snake_case
+ * Convert string to snake_case
+ * Handles camelCase, PascalCase, kebab-case, and spaces
  */
-function toSnakeCase(name: string): string {
+export function toSnakeCase(name: string): string {
   return name
     .replace(/([A-Z])/g, '_$1')
     .replace(/[-\s]+/g, '_')
@@ -233,20 +241,14 @@ function fixAIStructuredOutput(
 
 /**
  * Format a workflow for consistency
- * - Sorts nodes by position
- * - Normalizes connection format
+ * - Calculates node positions based on connection graph (like "Tidy Up")
  * - Removes empty/null values
  */
 export function formatWorkflow(workflow: N8nWorkflow): N8nWorkflow {
   const formatted: N8nWorkflow = JSON.parse(JSON.stringify(workflow));
 
-  // Sort nodes by Y position, then X
-  formatted.nodes.sort((a, b) => {
-    const [ax, ay] = a.position;
-    const [bx, by] = b.position;
-    if (ay !== by) return ay - by;
-    return ax - bx;
-  });
+  // Calculate positions based on graph layout
+  calculateNodePositions(formatted);
 
   // Clean up parameters - remove undefined/null
   for (const node of formatted.nodes) {
@@ -254,6 +256,82 @@ export function formatWorkflow(workflow: N8nWorkflow): N8nWorkflow {
   }
 
   return formatted;
+}
+
+// Layout constants (similar to n8n's defaults)
+const NODE_WIDTH = 200;
+const NODE_HEIGHT = 80;
+const HORIZONTAL_SPACING = 300;
+const VERTICAL_SPACING = 120;
+const START_X = 250;
+const START_Y = 300;
+
+/**
+ * Calculate node positions using dagre graph layout
+ * Provides proper edge crossing minimization and rank assignment
+ */
+function calculateNodePositions(workflow: N8nWorkflow): void {
+  if (workflow.nodes.length === 0) return;
+
+  // Create a new directed graph
+  const g = new dagre.graphlib.Graph();
+
+  // Set graph options: left-to-right layout, spacing
+  g.setGraph({
+    rankdir: 'LR', // Left to right (triggers on left, outputs on right)
+    nodesep: VERTICAL_SPACING, // Vertical spacing between nodes
+    ranksep: HORIZONTAL_SPACING, // Horizontal spacing between ranks/layers
+    marginx: START_X,
+    marginy: START_Y,
+  });
+
+  // Required for dagre
+  g.setDefaultEdgeLabel(() => ({}));
+
+  // Add all nodes to the graph
+  for (const node of workflow.nodes) {
+    g.setNode(node.name, {
+      width: NODE_WIDTH,
+      height: NODE_HEIGHT,
+    });
+  }
+
+  // Add edges from connections
+  for (const [sourceName, outputs] of Object.entries(workflow.connections)) {
+    for (const outputType of Object.values(outputs)) {
+      for (const connections of outputType) {
+        for (const conn of connections) {
+          // Only add edge if both nodes exist
+          if (g.hasNode(sourceName) && g.hasNode(conn.node)) {
+            g.setEdge(sourceName, conn.node);
+          }
+        }
+      }
+    }
+  }
+
+  // Run the dagre layout algorithm
+  dagre.layout(g);
+
+  // Apply calculated positions to workflow nodes
+  for (const node of workflow.nodes) {
+    const dagreNode = g.node(node.name);
+    if (dagreNode) {
+      // dagre returns center coordinates, convert to top-left
+      node.position = [
+        Math.round(dagreNode.x - NODE_WIDTH / 2),
+        Math.round(dagreNode.y - NODE_HEIGHT / 2),
+      ];
+    }
+  }
+
+  // Sort nodes by position for consistent output
+  workflow.nodes.sort((a, b) => {
+    const [ax, ay] = a.position;
+    const [bx, by] = b.position;
+    if (ax !== bx) return ax - bx;
+    return ay - by;
+  });
 }
 
 /**

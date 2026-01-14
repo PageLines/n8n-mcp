@@ -323,7 +323,7 @@ Returns the fixed workflow and list of changes made.`,
 
   {
     name: 'workflow_format',
-    description: 'Format a workflow: sort nodes by position, clean up null values.',
+    description: 'Format a workflow: auto-layout nodes based on connections (like "Tidy Up"), clean up null values. Calculates positions using graph layers - triggers on left, outputs on right.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -454,6 +454,35 @@ Returns the fixed workflow and list of changes made.`,
     inputSchema: {
       type: 'object',
       properties: {},
+    },
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // Node Discovery
+  // ─────────────────────────────────────────────────────────────
+  {
+    name: 'node_types_list',
+    description: `List standard n8n node types. Use this to discover correct node type names before creating workflows.
+
+Returns built-in nodes from n8n-nodes-base (400+ nodes). Community nodes not listed but still usable if you know the exact type.
+
+Categories: Triggers, Core, Flow, HTTP, Integration, Google, Aws, Microsoft, Transform, Files`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        search: {
+          type: 'string',
+          description: 'Search by name (fuzzy match)',
+        },
+        category: {
+          type: 'string',
+          description: 'Filter by category (Triggers, Core, Integration, etc.)',
+        },
+        limit: {
+          type: 'number',
+          description: 'Max results (default 100)',
+        },
+      },
     },
   },
 ];
