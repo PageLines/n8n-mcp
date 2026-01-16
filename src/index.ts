@@ -13,26 +13,9 @@ import {
 
 import { N8nClient } from './n8n-client.js';
 import { tools } from './tools.js';
-import { validateWorkflow } from './validators.js';
-import { validateExpressions, checkCircularReferences } from './expressions.js';
-import { autofixWorkflow, formatWorkflow } from './autofix.js';
-import {
-  initVersionControl,
-  saveVersion,
-  listVersions,
-  getVersion,
-  diffWorkflows,
-  getVersionStats,
-} from './versions.js';
-import {
-  formatWorkflowResponse,
-  formatExecutionResponse,
-  formatExecutionListResponse,
-  stringifyResponse,
-  type ResponseFormat,
-} from './response-format.js';
-import type { PatchOperation, N8nConnections } from './types.js';
-import { searchNodeTypes, getCategories, getNodeCount } from './node-registry.js';
+import { initVersionControl } from './versions.js';
+import { stringifyResponse } from './response-format.js';
+import { createHandlers, type HandlerName } from './handlers.js';
 
 // ─────────────────────────────────────────────────────────────
 // Configuration
@@ -51,6 +34,8 @@ const client = new N8nClient({
   apiUrl: N8N_API_URL,
   apiKey: N8N_API_KEY,
 });
+
+const handlers = createHandlers(client);
 
 // Initialize version control
 initVersionControl({
@@ -84,12 +69,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   try {
-    const result = await handleTool(name, args || {});
+    const handler = handlers[name as HandlerName];
+    if (!handler) {
+      throw new Error(`Unknown tool: ${name}`);
+    }
+
+    const result = await handler(args || {});
     return {
       content: [
         {
           type: 'text',
-          // Use minified JSON to reduce token usage
           text: typeof result === 'string' ? result : stringifyResponse(result),
         },
       ],
@@ -107,356 +96,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
   }
 });
-
-// ─────────────────────────────────────────────────────────────
-// Tool Handlers
-// ─────────────────────────────────────────────────────────────
-
-async function handleTool(name: string, args: Record<string, unknown>): Promise<unknown> {
-  switch (name) {
-    // Workflow operations
-    case 'workflow_list': {
-      const response = await client.listWorkflows({
-        active: args.active as boolean | undefined,
-        limit: (args.limit as number) || 100,
-      });
-      return {
-        workflows: response.data.map((w) => ({
-          id: w.id,
-          name: w.name,
-          active: w.active,
-          updatedAt: w.updatedAt,
-        })),
-        total: response.data.length,
-      };
-    }
-
-    case 'workflow_get': {
-      const workflow = await client.getWorkflow(args.id as string);
-      const format = (args.format as ResponseFormat) || 'compact';
-      return formatWorkflowResponse(workflow, format);
-    }
-
-    case 'workflow_create': {
-      const inputNodes = args.nodes as Array<{
-        name: string;
-        type: string;
-        typeVersion: number;
-        position: [number, number];
-        parameters: Record<string, unknown>;
-        credentials?: Record<string, { id: string; name: string }>;
-      }>;
-
-      const nodes = inputNodes.map((n, i) => ({
-        id: crypto.randomUUID(),
-        name: n.name,
-        type: n.type,
-        typeVersion: n.typeVersion,
-        position: n.position || [250, 250 + i * 100],
-        parameters: n.parameters || {},
-        ...(n.credentials && { credentials: n.credentials }),
-      }));
-
-      let workflow = await client.createWorkflow({
-        name: args.name as string,
-        nodes,
-        connections: (args.connections as N8nConnections) || {},
-        settings: args.settings as Record<string, unknown>,
-      });
-
-      // Validate and auto-cleanup
-      const validation = validateWorkflow(workflow);
-      const autofix = autofixWorkflow(workflow, validation.warnings);
-      let formatted = formatWorkflow(autofix.workflow);
-
-      // Apply cleanup if there were fixes or formatting changes
-      if (autofix.fixes.length > 0 || JSON.stringify(workflow) !== JSON.stringify(formatted)) {
-        workflow = await client.updateWorkflow(workflow.id, formatted);
-        formatted = workflow;
-      }
-
-      const format = (args.format as ResponseFormat) || 'compact';
-
-      return {
-        workflow: formatWorkflowResponse(formatted, format),
-        validation: {
-          ...validation,
-          warnings: autofix.unfixable, // Only show unfixable warnings
-        },
-        autoFixed: autofix.fixes.length > 0 ? autofix.fixes : undefined,
-      };
-    }
-
-    case 'workflow_update': {
-      const operations = args.operations as PatchOperation[];
-
-      // Save version before updating
-      const currentWorkflow = await client.getWorkflow(args.id as string);
-      const versionSaved = await saveVersion(currentWorkflow, 'before_update');
-
-      let { workflow, warnings } = await client.patchWorkflow(
-        args.id as string,
-        operations
-      );
-
-      // Validate and auto-cleanup
-      const validation = validateWorkflow(workflow);
-      const autofix = autofixWorkflow(workflow, validation.warnings);
-      let formatted = formatWorkflow(autofix.workflow);
-
-      // Apply cleanup if there were fixes or formatting changes
-      if (autofix.fixes.length > 0 || JSON.stringify(workflow) !== JSON.stringify(formatted)) {
-        workflow = await client.updateWorkflow(args.id as string, formatted);
-        formatted = workflow;
-      }
-
-      const format = (args.format as ResponseFormat) || 'compact';
-
-      return {
-        workflow: formatWorkflowResponse(formatted, format),
-        patchWarnings: warnings,
-        validation: {
-          ...validation,
-          warnings: autofix.unfixable, // Only show unfixable warnings
-        },
-        autoFixed: autofix.fixes.length > 0 ? autofix.fixes : undefined,
-        versionSaved: versionSaved ? versionSaved.id : null,
-      };
-    }
-
-    case 'workflow_delete': {
-      await client.deleteWorkflow(args.id as string);
-      return { success: true, message: `Workflow ${args.id} deleted` };
-    }
-
-    case 'workflow_activate': {
-      const workflow = await client.activateWorkflow(args.id as string);
-      return {
-        id: workflow.id,
-        name: workflow.name,
-        active: workflow.active,
-      };
-    }
-
-    case 'workflow_deactivate': {
-      const workflow = await client.deactivateWorkflow(args.id as string);
-      return {
-        id: workflow.id,
-        name: workflow.name,
-        active: workflow.active,
-      };
-    }
-
-    case 'workflow_execute': {
-      const result = await client.executeWorkflow(
-        args.id as string,
-        args.data as Record<string, unknown>
-      );
-      return result;
-    }
-
-    // Execution operations
-    case 'execution_list': {
-      const response = await client.listExecutions({
-        workflowId: args.workflowId as string | undefined,
-        status: args.status as 'success' | 'error' | 'waiting' | undefined,
-        limit: (args.limit as number) || 20,
-      });
-      const format = (args.format as ResponseFormat) || 'compact';
-      return {
-        executions: formatExecutionListResponse(response.data, format),
-        total: response.data.length,
-      };
-    }
-
-    case 'execution_get': {
-      const execution = await client.getExecution(args.id as string);
-      const format = (args.format as ResponseFormat) || 'compact';
-      return formatExecutionResponse(execution, format);
-    }
-
-    // Validation & Quality
-    case 'workflow_validate': {
-      const workflow = await client.getWorkflow(args.id as string);
-      const validation = validateWorkflow(workflow);
-      const expressionIssues = validateExpressions(workflow);
-      const circularRefs = checkCircularReferences(workflow);
-
-      return {
-        workflowId: workflow.id,
-        workflowName: workflow.name,
-        ...validation,
-        expressionIssues,
-        circularReferences: circularRefs.length > 0 ? circularRefs : null,
-      };
-    }
-
-    case 'workflow_autofix': {
-      const workflow = await client.getWorkflow(args.id as string);
-      const validation = validateWorkflow(workflow);
-      const result = autofixWorkflow(workflow, validation.warnings);
-
-      if (args.apply && result.fixes.length > 0) {
-        // Save version before applying fixes
-        await saveVersion(workflow, 'before_autofix');
-
-        // Apply the fixed workflow
-        await client.updateWorkflow(args.id as string, result.workflow);
-
-        return {
-          applied: true,
-          fixes: result.fixes,
-          unfixable: result.unfixable,
-          workflow: result.workflow,
-        };
-      }
-
-      return {
-        applied: false,
-        fixes: result.fixes,
-        unfixable: result.unfixable,
-        previewWorkflow: result.workflow,
-      };
-    }
-
-    case 'workflow_format': {
-      const workflow = await client.getWorkflow(args.id as string);
-      const formatted = formatWorkflow(workflow);
-
-      if (args.apply) {
-        await saveVersion(workflow, 'before_format');
-        await client.updateWorkflow(args.id as string, formatted);
-
-        return {
-          applied: true,
-          workflow: formatted,
-        };
-      }
-
-      return {
-        applied: false,
-        previewWorkflow: formatted,
-      };
-    }
-
-    // Version Control
-    case 'version_list': {
-      const versions = await listVersions(args.workflowId as string);
-      return {
-        workflowId: args.workflowId,
-        versions,
-        total: versions.length,
-      };
-    }
-
-    case 'version_get': {
-      const version = await getVersion(
-        args.workflowId as string,
-        args.versionId as string
-      );
-      if (!version) {
-        throw new Error(`Version ${args.versionId} not found`);
-      }
-      const format = (args.format as ResponseFormat) || 'compact';
-      return {
-        meta: version.meta,
-        workflow: formatWorkflowResponse(version.workflow, format),
-      };
-    }
-
-    case 'version_save': {
-      const workflow = await client.getWorkflow(args.workflowId as string);
-      const version = await saveVersion(
-        workflow,
-        (args.reason as string) || 'manual'
-      );
-      if (!version) {
-        return { saved: false, message: 'No changes detected since last version' };
-      }
-      return { saved: true, version };
-    }
-
-    case 'version_rollback': {
-      const version = await getVersion(
-        args.workflowId as string,
-        args.versionId as string
-      );
-      if (!version) {
-        throw new Error(`Version ${args.versionId} not found`);
-      }
-
-      // Save current state before rollback
-      const currentWorkflow = await client.getWorkflow(args.workflowId as string);
-      await saveVersion(currentWorkflow, 'before_rollback');
-
-      // Apply the old version
-      await client.updateWorkflow(args.workflowId as string, version.workflow);
-      const format = (args.format as ResponseFormat) || 'compact';
-
-      return {
-        success: true,
-        restoredVersion: version.meta,
-        workflow: formatWorkflowResponse(version.workflow, format),
-      };
-    }
-
-    case 'version_diff': {
-      const toVersion = await getVersion(
-        args.workflowId as string,
-        args.toVersionId as string
-      );
-      if (!toVersion) {
-        throw new Error(`Version ${args.toVersionId} not found`);
-      }
-
-      let fromWorkflow;
-      if (args.fromVersionId) {
-        const fromVersion = await getVersion(
-          args.workflowId as string,
-          args.fromVersionId as string
-        );
-        if (!fromVersion) {
-          throw new Error(`Version ${args.fromVersionId} not found`);
-        }
-        fromWorkflow = fromVersion.workflow;
-      } else {
-        // Compare against current workflow state
-        fromWorkflow = await client.getWorkflow(args.workflowId as string);
-      }
-
-      const diff = diffWorkflows(fromWorkflow, toVersion.workflow);
-
-      return {
-        from: args.fromVersionId || 'current',
-        to: args.toVersionId,
-        diff,
-      };
-    }
-
-    case 'version_stats': {
-      const stats = await getVersionStats();
-      return stats;
-    }
-
-    // Node Discovery
-    case 'node_types_list': {
-      const nodes = searchNodeTypes({
-        search: args.search as string | undefined,
-        category: args.category as string | undefined,
-        limit: (args.limit as number) || 100,
-      });
-      return {
-        nodes,
-        total: nodes.length,
-        totalAvailable: getNodeCount(),
-        categories: getCategories(),
-      };
-    }
-
-    default:
-      throw new Error(`Unknown tool: ${name}`);
-  }
-}
 
 // ─────────────────────────────────────────────────────────────
 // Start Server

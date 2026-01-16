@@ -14,13 +14,17 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - `src/schemas.ts` - Zod schemas for n8n API request validation
+- `src/handlers.ts` - Extracted tool handlers for modularity and testability
 - `WorkflowSettingsSchema` - Strict schema matching n8n OpenAPI spec
 - `prepareWorkflowRequest()` - Central function for request preparation
+- `autoCleanup()` - DRY helper for validate → autofix → format pipeline
 - 12 new unit tests for schema validation
 
 ### Changed
 - `zod` added as dependency for schema validation
 - `n8n-client.ts` now uses `prepareWorkflowRequest()` for all workflow updates
+- `index.ts` refactored: 474 → 113 lines (76% reduction)
+- Auto-cleanup pipeline deduplicated (was in both `workflow_create` and `workflow_update`)
 
 ## [0.3.6] - 2025-01-14
 

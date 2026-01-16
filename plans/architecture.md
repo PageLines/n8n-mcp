@@ -22,15 +22,18 @@
 
 ```
 src/
-├── index.ts           # MCP server, tool dispatch
+├── index.ts           # MCP server entry point (113 lines)
+├── handlers.ts        # Tool handlers (modular, testable)
+├── schemas.ts         # Zod schemas for API validation
 ├── types.ts           # Type definitions
 ├── tools.ts           # Tool schemas (JSON Schema)
 ├── n8n-client.ts      # n8n REST API client
-├── validators.ts      # Validation rules + node type validation
+├── validators.ts      # Validation rules
 ├── expressions.ts     # Expression parsing ({{ }})
 ├── autofix.ts         # Auto-fix transforms
 ├── versions.ts        # Version control (local fs)
-└── response-format.ts # Token-efficient response formatting
+├── response-format.ts # Token-efficient response formatting
+└── node-registry.ts   # Static node type registry
 ```
 
 ## Data Flow
