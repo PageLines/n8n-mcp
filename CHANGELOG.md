@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.7] - 2025-01-16
+
+### Fixed
+- **Critical bug**: `workflow_update` failing with "request/body/settings must NOT have additional properties" error
+- Root cause: n8n API returns internal settings properties on GET (like `timeSavedMode`) that are rejected on PUT
+- Solution: Added Zod-based schema validation in `src/schemas.ts` with `prepareWorkflowRequest()` function
+  - Validates settings against n8n OpenAPI spec
+  - Strips unknown/internal properties automatically
+  - Pure function, easily unit testable
+
+### Added
+- `src/schemas.ts` - Zod schemas for n8n API request validation
+- `WorkflowSettingsSchema` - Strict schema matching n8n OpenAPI spec
+- `prepareWorkflowRequest()` - Central function for request preparation
+- 12 new unit tests for schema validation
+
+### Changed
+- `zod` added as dependency for schema validation
+- `n8n-client.ts` now uses `prepareWorkflowRequest()` for all workflow updates
+
 ## [0.3.6] - 2025-01-14
 
 ### Fixed

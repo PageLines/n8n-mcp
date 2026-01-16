@@ -4,8 +4,6 @@
  */
 
 import {
-  N8N_WORKFLOW_WRITABLE_FIELDS,
-  pickFields,
   type N8nWorkflow,
   type N8nWorkflowListItem,
   type N8nExecution,
@@ -14,6 +12,7 @@ import {
   type N8nNode,
   type PatchOperation,
 } from './types.js';
+import { prepareWorkflowRequest } from './schemas.js';
 
 export interface N8nClientConfig {
   apiUrl: string;
@@ -99,9 +98,9 @@ export class N8nClient {
     id: string,
     workflow: Partial<N8nWorkflow>
   ): Promise<N8nWorkflow> {
-    // Schema-driven: only send fields n8n accepts (defined in types.ts)
-    const allowed = pickFields(workflow, N8N_WORKFLOW_WRITABLE_FIELDS);
-    return this.request('PUT', `/api/v1/workflows/${id}`, allowed);
+    // Schema-driven: strip read-only fields and validate settings
+    const prepared = prepareWorkflowRequest(workflow);
+    return this.request('PUT', `/api/v1/workflows/${id}`, prepared);
   }
 
   async deleteWorkflow(id: string): Promise<void> {
@@ -132,13 +131,8 @@ export class N8nClient {
     // Apply operations
     const updated = this.applyOperations(current, operations, warnings);
 
-    // Save
-    const result = await this.updateWorkflow(id, {
-      name: updated.name,
-      nodes: updated.nodes,
-      connections: updated.connections,
-      settings: updated.settings,
-    });
+    // Save - prepareWorkflowRequest handles field filtering and settings validation
+    const result = await this.updateWorkflow(id, updated);
 
     return { workflow: result, warnings };
   }

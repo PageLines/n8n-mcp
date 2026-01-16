@@ -1,6 +1,6 @@
 {
   "name": "@pagelines/n8n-mcp",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Opinionated MCP server for n8n workflow automation",
   "type": "module",
   "main": "dist/index.js",
@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "dagre": "^0.8.5"
+    "dagre": "^0.8.5",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/dagre": "^0.7.53",
